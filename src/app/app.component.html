@@ -1,0 +1,57 @@
+<mat-toolbar>
+  <span>Admin Pannel</span>
+</mat-toolbar>
+<div class="outline-container">
+  <h2>Add Trip</h2>
+  <div class="trip-title-form-row">
+    <h4>Title:</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput>
+    </mat-form-field>
+    <h4>Slug:</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Slug</mat-label>
+      <input matInput width="100">
+      <mat-hint>Hint: Should be in Lower Case</mat-hint>
+    </mat-form-field>
+  </div>
+  <div class="trip-overview-form-row">
+    <h4>Overview:</h4>
+    <mat-form-field appearance="outline">
+      <mat-label></mat-label>
+      <textarea matInput rows="10"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="trip-attractions-form-row">
+    <h4>Attractions</h4>
+
+    <div class="attraction-container">
+      <h5>Available Attractions</h5>
+      <div
+        cdkDropList
+        #availableList="cdkDropList"
+        [cdkDropListData]="availableAttractions"
+        [cdkDropListConnectedTo]="[chosenList]"
+        class="attractions-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="attraction-box" *ngFor="let attraction of availableAttractions" cdkDrag>{{attraction}}</div>
+      </div>
+    </div>
+
+    <div class="attraction-container">
+      <h5>Chosen Attractions</h5>
+      <div
+        cdkDropList
+        #chosenList="cdkDropList"
+        [cdkDropListData]="selectedAttractions"
+        [cdkDropListConnectedTo]="[availableList]"
+        class="attractions-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="attraction-box" *ngFor="let attraction of selectedAttractions" cdkDrag>{{attraction}}</div>
+      </div>
+    </div>
+
+  </div>
+</div>
