@@ -52,6 +52,40 @@
         <div class="attraction-box" *ngFor="let attraction of selectedAttractions" cdkDrag>{{attraction}}</div>
       </div>
     </div>
-
   </div>
+
+  <div>
+    <h3>Add Package</h3>
+    <div class="trip-package-row">
+      <h4>Title:</h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <h4>Price per Person:</h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Price per Person</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <mat-checkbox>is Standard</mat-checkbox>
+      <button mat-raised-button color="warn">Add</button>
+    </div>
+  </div>
+  <mat-list>
+    <mat-list-item *ngFor="let i of [].constructor(3)">
+      <div class="package-list-item">
+          <h3>Deluxe</h3>
+          <h3>24000</h3>
+        <div>
+          <button mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="primary">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
 </div>
