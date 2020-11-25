@@ -121,3 +121,37 @@
     margin-bottom: 0;
   }
 }
+
+.trip-departure-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 20px;
+
+  mat-checkbox {
+    margin-bottom: 16px;
+  }
+
+  button {
+    margin-bottom: 16px;
+  }
+
+}
+
+.package-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+.spacing {
+  display: inline-block;
+  margin: 0 50px;
+}
