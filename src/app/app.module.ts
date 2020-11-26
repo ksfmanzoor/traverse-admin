@@ -1,4 +1,3 @@
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -13,6 +12,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 import {AppComponent} from './app.component';
@@ -30,7 +30,7 @@ import {AppComponent} from './app.component';
     MatButtonModule,
     MatListModule,
     MatIconModule,
-    DragDropModule,
+    NgxMatSelectSearchModule,
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,

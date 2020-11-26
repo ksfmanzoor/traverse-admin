@@ -26,32 +26,16 @@
 
   <div class="trip-attractions-form-row">
     <h4>Attractions</h4>
-
-    <div class="attraction-container">
-      <h5>Available Attractions</h5>
-      <div
-        cdkDropList
-        #availableList="cdkDropList"
-        [cdkDropListData]="availableAttractions"
-        [cdkDropListConnectedTo]="[chosenList]"
-        class="attractions-list"
-        (cdkDropListDropped)="drop($event)">
-        <div class="attraction-box" *ngFor="let attraction of availableAttractions" cdkDrag>{{attraction}}</div>
-      </div>
-    </div>
-
-    <div class="attraction-container">
-      <h5>Chosen Attractions</h5>
-      <div
-        cdkDropList
-        #chosenList="cdkDropList"
-        [cdkDropListData]="selectedAttractions"
-        [cdkDropListConnectedTo]="[availableList]"
-        class="attractions-list"
-        (cdkDropListDropped)="drop($event)">
-        <div class="attraction-box" *ngFor="let attraction of selectedAttractions" cdkDrag>{{attraction}}</div>
-      </div>
-    </div>
+    <mat-form-field>
+      <mat-select [formControl]="bankMultiCtrl" placeholder="Attractions" [multiple]="true">
+        <mat-option>
+          <ngx-mat-select-search [formControl]="bankMultiFilterCtrl" [placeholderLabel]="'Search'"></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let bank of filteredBanksMulti | async" [value]="bank">
+          {{bank.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <mat-divider></mat-divider>
   <div>
@@ -258,6 +242,57 @@
         </mat-select>
       </mat-form-field>
       <button mat-raised-button color="warn">Add</button>
+    </div>
+  </div>
+  <mat-expansion-panel (opened)="panelOpenState = true"
+                       (closed)="panelOpenState = false">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Day 1
+      </mat-panel-title>
+      <mat-panel-description>Common</mat-panel-description>
+    </mat-expansion-panel-header>
+    <div style="display: flex; justify-content: space-between;align-items: center">
+      <div>
+        <p>Date: 25/11/2020</p>
+        <p>Departures: Islamabad, Lahore</p>
+        <p>Body: Lorem Ipsum Gyspum Sit</p>
+      </div>
+      <div>
+        <button mat-icon-button>
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="primary">
+          <mat-icon style="color: white">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-list>
+      <mat-list-item *ngFor="let i of [].constructor(3)">
+        <div class="package-list-item">
+          <h3>Deluxe</h3>
+          <h3>24000</h3>
+          <div>
+            <button mat-icon-button>
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="primary">
+              <mat-icon style="color: white">delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+  <mat-divider>
+  </mat-divider>
+
+  <div>
+    <h3>Gallery Images</h3>
+    <div class="gallery-images-row">
+      <h4>Images: </h4>
+      <input  type="file" multiple>
     </div>
   </div>
 </div>
