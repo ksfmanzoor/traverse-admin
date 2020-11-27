@@ -82,7 +82,6 @@ export class AppComponent implements OnInit {
     if (!this.banks) {
       return;
     }
-    // get the search keyword
     let search = this.bankMultiFilterCtrl.value;
     if (!search) {
       this.filteredBanksMulti.next(this.banks.slice());
