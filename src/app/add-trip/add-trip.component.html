@@ -166,8 +166,8 @@
             <div>
               <p>via: {{i.via}}</p>
               <p>Price Per Person: {{i.price_per_person}}</p>
-              <p>Departure: {{i.departure_date | date}}</p>
-              <p>Arrival: {{i.arrival_date | date}}</p>
+              <p>Departure Date & Time: {{i.departure_date | date: 'medium'}}</p>
+              <p>Arrival Date & time: {{i.arrival_date | date: 'medium'}}</p>
             </div>
             <div>
               <button mat-icon-button (click)="updateDeparture(i, j)">
@@ -219,9 +219,11 @@
       <mat-list-item *ngFor="let i of tripServicesList; let j=index">
         <div class="trip-itinerary-package-list-item">
           <h3 class="list-item-text">{{i.trip_service.title + ': ' + i.trip_service.description + ' at ' + i.value}}</h3>
-          <ng-container *ngFor="let y of i.packages">
-            <h3 class="list-item-text center-align">{{y.title}}</h3>
-          </ng-container>
+          <div class="list-item-text" style="display: flex; flex-direction: row; justify-content: center">
+            <ng-container *ngFor="let y of i.packages">
+              <h3>{{y.title}}</h3>
+            </ng-container>
+          </div>
           <div class="list-item-actions">
             <button mat-icon-button (click)="updateTripService(i, j)">
               <mat-icon>edit</mat-icon>

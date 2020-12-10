@@ -1,13 +1,10 @@
 export interface Trip {
-  id: string;
   title: string;
   slug: string;
-  itinerary_days: ItineraryDay[];
   overview: string;
-  packages: Package[];
-  departures: Departure[];
-  gallery_images: GalleryImage[];
   attractions: Attraction[];
+  itinerary_days: ItineraryDay[];
+  gallery_images: GalleryImage[];
 }
 
 export interface TripService {
@@ -37,39 +34,20 @@ export interface Package {
   is_standard: boolean;
 }
 
-export interface TripAddon {
-  id: string;
-  title: string;
-  description: string;
-}
-
-export interface TripAddonValue {
-  id: string;
-  price: number;
-  trip_addon: TripAddon;
-  package: string;
-}
 
 export interface Departure {
   location: string;
   via: string;
   price_per_person: number;
-  departure_date: Date;
-  arrival_date: Date;
-  // trip_addon_values: TripAddonValue[];
+  departure_date: string;
+  arrival_date: string;
   is_standard: boolean;
 }
 
 export interface GalleryImage {
-  id: string;
   image: string;
-  alt_text: string;
 }
 
 export interface Attraction {
   id: string;
-  title: string;
-  subtitle: string;
-  thumbnail: string;
-  slug: string;
 }

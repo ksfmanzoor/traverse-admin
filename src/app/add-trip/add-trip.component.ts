@@ -1,10 +1,12 @@
+import {formatDate} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
 import {ReplaySubject} from 'rxjs';
 import {Attraction} from 'src/app/models/attraction';
-import {Departure, ItineraryDay, Package, TripService, TripServiceValue} from 'src/app/models/trip';
+import {Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
+import {CreateTripService} from 'src/app/services/create-trip.service';
 
 @Component({
   selector: 'app-add-trip',
@@ -46,7 +48,7 @@ export class AddTripComponent implements OnInit {
   @ViewChild('multiSelect', {static: true}) multiSelect: MatSelect;
   private images = [];
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private createTripService: CreateTripService) {}
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -144,8 +146,10 @@ export class AddTripComponent implements OnInit {
       location: this.formControl.departureLocation.value,
       via: this.formControl.departureVia.value,
       price_per_person: this.formControl.departurePrice.value,
-      departure_date: this.formControl.departureDate.value,
-      arrival_date: this.formControl.arrivalDate.value,
+      departure_date: this.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
+        this.formControl.departureTime.value).toISOString(),
+      arrival_date: this.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
+        this.formControl.arrivalTime.value).toISOString(),
       is_standard: this.formControl.departureStandard.value
     };
     if (this.isDepartureEditMode) {
@@ -158,7 +162,9 @@ export class AddTripComponent implements OnInit {
     this.formControl.departureVia.setValue('');
     this.formControl.departurePrice.setValue('');
     this.formControl.departureDate.setValue('');
+    this.formControl.departureTime.setValue('');
     this.formControl.arrivalDate.setValue('');
+    this.formControl.arrivalTime.setValue('');
     this.formControl.departureStandard.setValue(false);
   }
 
@@ -166,8 +172,10 @@ export class AddTripComponent implements OnInit {
     this.formControl.departureLocation.setValue(departure.location);
     this.formControl.departureVia.setValue(departure.via);
     this.formControl.departurePrice.setValue(departure.price_per_person);
-    this.formControl.departureDate.setValue(departure.departure_date.toUTCString());
-    this.formControl.arrivalDate.setValue(departure.arrival_date);
+    this.formControl.departureDate.setValue(new Date(departure.departure_date));
+    this.formControl.departureTime.setValue(formatDate(departure.departure_date, 'hh:mm a', 'en'));
+    this.formControl.arrivalDate.setValue(new Date(departure.arrival_date));
+    this.formControl.arrivalTime.setValue(formatDate(departure.arrival_date, 'hh:mm a', 'en'));
     this.formControl.departureStandard.setValue(departure.is_standard);
     this.departureIndex = index;
     this.isDepartureEditMode = !this.isDepartureEditMode;
@@ -250,7 +258,7 @@ export class AddTripComponent implements OnInit {
         const reader = new FileReader();
 
         reader.onload = (fileEvent: any) => {
-          this.images.push({image : fileEvent.target.result});
+          this.images.push({image: fileEvent.target.result});
 
           this.addTripForm.patchValue({
             galleryImages: this.images
@@ -262,9 +270,7 @@ export class AddTripComponent implements OnInit {
     }
   }
 
-  dateAndTimeCombiner(): Date {
-    const date: string = this.formControl.departureDate.value.toString();
-    const time: string = this.formControl.departureTime.value;
+  dateAndTimeCombiner(date, time): Date {
     const t1: any = time.split(' ');
     const t2: any = t1[0].split(':');
     t2[0] = (t1[1] === 'PM' ? (1 * t2[0] + 12) : t2[0]);
@@ -274,8 +280,17 @@ export class AddTripComponent implements OnInit {
   }
 
   addTrip() {
-    console.log(this.addTripForm.value);
-    console.log(this.itineraryDaysList);
+    const trip: Trip = {
+      title: this.formControl.tripTitle.value,
+      slug: this.formControl.slug.value,
+      overview: this.formControl.overview.value,
+      attractions: this.formControl.attractions.value,
+      itinerary_days: this.itineraryDaysList,
+      gallery_images: this.images
+    };
+    this.createTripService.postTrip(trip).subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
