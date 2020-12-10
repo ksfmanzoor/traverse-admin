@@ -18,17 +18,15 @@ export interface TripService {
 }
 
 export interface TripServiceValue {
-  id: string;
   value: string;
   trip_service: TripService;
-  packages: string[];
+  packages: Package[];
 }
 
 export interface ItineraryDay {
-  id: string;
   date: string;
   body: string;
-  departures: string[];
+  departures: Departure[];
   trip_service_values: TripServiceValue[];
   group: string;
 }

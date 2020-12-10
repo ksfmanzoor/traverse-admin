@@ -1,0 +1,223 @@
+.trip-toolbar {
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.trip-info-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-title-slug-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-title-slug-row h4 {
+  margin-right: 100px;
+}
+.trip-add-title-slug-row h4:nth-child(3) {
+  margin-left: 20px;
+}
+.trip-add-title-slug-row .mat-form-field {
+  width: 100% !important;
+}
+
+.trip-add-overview-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-overview-row h4 {
+  margin-right: 69px;
+}
+.trip-add-overview-row .mat-form-field {
+  width: 100% !important;
+}
+
+.trip-add-attractions-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-attractions-row h4 {
+  align-self: center;
+  margin-right: 69px;
+}
+.trip-add-attractions-row .mat-form-field {
+  width: 100% !important;
+}
+
+.trip-packages-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-package-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+.trip-add-package-row mat-checkbox {
+  margin-bottom: 16px;
+}
+.trip-add-package-row button {
+  margin-bottom: 16px;
+}
+
+.trip-packages-list-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.trip-packages-list-items h3 {
+  font-size: 14px;
+}
+
+.trip-divider-spacing {
+  padding: 40px 0 20px 0;
+}
+
+.trip-departure-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-departure-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+
+.trip-departure-datetime-row-spacing {
+  display: inline-block;
+  margin: 0 50px;
+}
+
+.trip-departures-list-items {
+  padding: 20px;
+}
+
+.trip-departures-list-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-services-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-service-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-service-row button {
+  margin-bottom: 16px;
+}
+
+.trip-itinerary-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-itinerary-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-itinerary-row button {
+  margin-bottom: 16px;
+}
+
+.trip-add-itinerary-body-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-itinerary-body-row h4 {
+  margin-right: 80px;
+}
+.trip-add-itinerary-body-row .mat-form-field {
+  width: 100% !important;
+}
+
+.trip-itinerary-list-items {
+  padding: 20px;
+}
+
+.trip-itinerary-list-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-itinerary-package-list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.trip-itinerary-package-list-item h3 {
+  font-size: 14px;
+}
+
+.trip-gallery-images-section h3 {
+  font-size: 18px;
+  margin: 20px;
+}
+
+.trip-add-gallery-images-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 40px;
+}
+.trip-add-gallery-images-row h4 {
+  margin-bottom: 0;
+}
+.trip-add-gallery-images-row input {
+  margin-left: 100px;
+}
+
+.list-item-text {
+  width: 33.33%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.list-item-actions {
+  width: 33.33%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+/*# sourceMappingURL=add-trip.component.css.map */
