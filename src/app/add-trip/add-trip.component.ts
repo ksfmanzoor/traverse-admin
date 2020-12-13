@@ -252,22 +252,17 @@ export class AddTripComponent implements OnInit {
 
 
   onFileChange(event) {
-    if (event.target.files && event.target.files[0]) {
-      const filesAmount = event.target.files.length;
-      for (let i = 0; i < filesAmount; i++) {
-        const reader = new FileReader();
-
-        reader.onload = (fileEvent: any) => {
-          this.images.push({image: fileEvent.target.result});
-
-          this.addTripForm.patchValue({
-            galleryImages: this.images
-          });
-        };
-
-        reader.readAsDataURL(event.target.files[i]);
-      }
+    for  (let i =  0; i <  event.target.files.length; i++)  {
+      this.images.push(event.target.files[i]);
     }
+    console.log(this.images);
+    const formData =  new  FormData();
+    for  (let i =  0; i <  this.images.length; i++)  {
+      formData.append('image',  this.images[i]);
+    }
+    this.addTripForm.patchValue({
+      galleryImages: formData
+    });
   }
 
   dateAndTimeCombiner(date, time): Date {
@@ -286,7 +281,7 @@ export class AddTripComponent implements OnInit {
       overview: this.formControl.overview.value,
       attractions: this.formControl.attractions.value,
       itinerary_days: this.itineraryDaysList,
-      gallery_images: this.images
+      gallery_images: this.formControl.galleryImages.value
     };
     this.createTripService.postTrip(trip).subscribe(data => {
       console.log(data);
