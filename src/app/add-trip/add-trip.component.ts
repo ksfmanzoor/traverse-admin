@@ -7,6 +7,8 @@ import {ReplaySubject} from 'rxjs';
 import {Attraction} from 'src/app/models/attraction';
 import {Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
 import {CreateTripService} from 'src/app/services/create-trip.service';
+import { v4 as uuid4 } from 'uuid';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-add-trip',
@@ -48,7 +50,7 @@ export class AddTripComponent implements OnInit {
   @ViewChild('multiSelect', {static: true}) multiSelect: MatSelect;
   private images = [];
 
-  constructor(private route: ActivatedRoute, private createTripService: CreateTripService) {}
+  constructor(private route: ActivatedRoute, private createTripService: CreateTripService, private datePipe: DatePipe) {}
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -114,6 +116,7 @@ export class AddTripComponent implements OnInit {
 
   addPackage() {
     const pack: Package = {
+      id: uuid4(),
       title: this.formControl.packageTitle.value,
       price_per_person: this.formControl.packagePrice.value,
       is_standard: this.formControl.packageStandard.value
@@ -143,6 +146,7 @@ export class AddTripComponent implements OnInit {
 
   addDeparture() {
     const departure: Departure = {
+      id: uuid4(),
       location: this.formControl.departureLocation.value,
       via: this.formControl.departureVia.value,
       price_per_person: this.formControl.departurePrice.value,
@@ -190,7 +194,7 @@ export class AddTripComponent implements OnInit {
     const service: TripServiceValue = {
       trip_service: this.formControl.serviceType.value,
       value: this.formControl.serviceValue.value,
-      packages: this.formControl.servicePackages.value,
+      packages: this.formControl.servicePackages.value.map((ele: Package) => (ele.id)),
     };
     if (this.isServiceEditMode) {
       this.tripServicesList[this.serviceIndex] = service;
@@ -217,10 +221,10 @@ export class AddTripComponent implements OnInit {
 
   addItineraryDay() {
     const itineraryDay: ItineraryDay = {
-      date: this.formControl.itineraryDate.value.toISOString(),
+      date: this.datePipe.transform(this.formControl.itineraryDate.value, 'yyyy-MM-dd'),
       group: this.formControl.itineraryGroup.value,
       body: this.formControl.itineraryBody.value,
-      departures: this.formControl.itineraryDepartures.value,
+      departures: this.formControl.itineraryDepartures.value.map((ele: Departure) => (ele.id)),
       trip_service_values: this.formControl.itineraryServices.value,
     };
     if (this.isItineraryEditMode) {
@@ -285,6 +289,8 @@ export class AddTripComponent implements OnInit {
       slug: this.formControl.slug.value,
       overview: this.formControl.overview.value,
       attractions: this.formControl.attractions.value,
+      packages: this.packagesList,
+      departures: this.departuresList,
       itinerary_days: this.itineraryDaysList,
       gallery_images: this.images
     };
@@ -292,5 +298,4 @@ export class AddTripComponent implements OnInit {
       console.log(data);
     });
   }
-
 }

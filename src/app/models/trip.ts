@@ -1,7 +1,13 @@
+export interface ForeignKey {
+  id: string;
+}
+
 export interface Trip {
   title: string;
   slug: string;
   overview: string;
+  packages: Package[];
+  departures: Departure[];
   attractions: Attraction[];
   itinerary_days: ItineraryDay[];
   gallery_images: GalleryImage[];
@@ -17,18 +23,19 @@ export interface TripService {
 export interface TripServiceValue {
   value: string;
   trip_service: TripService;
-  packages: Package[];
+  packages: ForeignKey[];
 }
 
 export interface ItineraryDay {
   date: string;
   body: string;
-  departures: Departure[];
+  departures: string[];
   trip_service_values: TripServiceValue[];
   group: string;
 }
 
 export interface Package {
+  id: string;
   title: string;
   price_per_person: number;
   is_standard: boolean;
@@ -36,6 +43,7 @@ export interface Package {
 
 
 export interface Departure {
+  id: string;
   location: string;
   via: string;
   price_per_person: number;

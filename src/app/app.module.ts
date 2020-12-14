@@ -20,6 +20,7 @@ import {AppRoutingModule} from 'src/app/app-routing.module';
 import {AppComponent} from './app.component';
 import {AddTripComponent} from './add-trip/add-trip.component';
 import {HomepageComponent} from './homepage/homepage.component';
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,7 @@ import {HomepageComponent} from './homepage/homepage.component';
     MatExpansionModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [DatePipe, ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
