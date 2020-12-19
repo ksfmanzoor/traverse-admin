@@ -1,7 +1,3 @@
-export interface ForeignKey {
-  id: string;
-}
-
 export interface Trip {
   title: string;
   slug: string;
@@ -23,7 +19,7 @@ export interface TripService {
 export interface TripServiceValue {
   value: string;
   trip_service: TripService;
-  packages: ForeignKey[];
+  packages: string[];
 }
 
 export interface ItineraryDay {

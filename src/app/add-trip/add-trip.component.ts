@@ -7,8 +7,8 @@ import {ReplaySubject} from 'rxjs';
 import {Attraction} from 'src/app/models/attraction';
 import {Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
 import {CreateTripService} from 'src/app/services/create-trip.service';
-import { v4 as uuid4 } from 'uuid';
-import { DatePipe } from '@angular/common';
+import {v4 as uuid4} from 'uuid';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-add-trip',
@@ -68,15 +68,15 @@ export class AddTripComponent implements OnInit {
         departureLocation: new FormControl(''),
         departureVia: new FormControl(''),
         departurePrice: new FormControl(''),
-        departureDate: new FormControl(''),
+        departureDate: new FormControl({value: '', disabled: true}),
         departureTime: new FormControl(''),
-        arrivalDate: new FormControl(''),
+        arrivalDate: new FormControl({value: '', disabled: true}),
         arrivalTime: new FormControl(''),
         departureStandard: new FormControl(false),
         serviceType: new FormControl(''),
         serviceValue: new FormControl(''),
         servicePackages: new FormControl(''),
-        itineraryDate: new FormControl(''),
+        itineraryDate: new FormControl({value: '', disabled: true}),
         itineraryGroup: new FormControl(''),
         itineraryDepartures: new FormControl(''),
         itineraryBody: new FormControl(''),
@@ -194,7 +194,7 @@ export class AddTripComponent implements OnInit {
     const service: TripServiceValue = {
       trip_service: this.formControl.serviceType.value,
       value: this.formControl.serviceValue.value,
-      packages: this.formControl.servicePackages.value.map((ele: Package) => (ele.id)),
+      packages: this.formControl.servicePackages.value,
     };
     if (this.isServiceEditMode) {
       this.tripServicesList[this.serviceIndex] = service;
@@ -224,7 +224,7 @@ export class AddTripComponent implements OnInit {
       date: this.datePipe.transform(this.formControl.itineraryDate.value, 'yyyy-MM-dd'),
       group: this.formControl.itineraryGroup.value,
       body: this.formControl.itineraryBody.value,
-      departures: this.formControl.itineraryDepartures.value.map((ele: Departure) => (ele.id)),
+      departures: this.formControl.itineraryDepartures.value,
       trip_service_values: this.formControl.itineraryServices.value,
     };
     if (this.isItineraryEditMode) {
@@ -256,17 +256,22 @@ export class AddTripComponent implements OnInit {
 
 
   onFileChange(event) {
-    for  (let i =  0; i <  event.target.files.length; i++)  {
-      this.images.push(event.target.files[i]);
+    if (event.target.files && event.target.files[0]) {
+      const filesAmount = event.target.files.length;
+      for (let i = 0; i < filesAmount; i++) {
+        const reader = new FileReader();
+
+        reader.onload = (fileEvent: any) => {
+          this.images.push({image: fileEvent.target.result});
+
+          this.addTripForm.patchValue({
+            galleryImages: this.images
+          });
+        };
+
+        reader.readAsDataURL(event.target.files[i]);
+      }
     }
-    console.log(this.images);
-    const formData =  new  FormData();
-    for  (let i =  0; i <  this.images.length; i++)  {
-      formData.append('image',  this.images[i]);
-    }
-    this.addTripForm.patchValue({
-      galleryImages: formData
-    });
   }
 
   dateAndTimeCombiner(date, time): Date {

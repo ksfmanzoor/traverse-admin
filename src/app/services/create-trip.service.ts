@@ -6,7 +6,7 @@ import {Trip} from 'src/app/models/trip';
   providedIn: 'root'
 })
 export class CreateTripService {
-  addTripUrl = 'http://127.0.0.1:8000/api/traverse/trip/';
+  addTripUrl = 'https://api.traversepakistan.com/api/traverse/trip/';
 
   constructor(private httpClient: HttpClient) { }
 

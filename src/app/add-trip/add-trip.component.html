@@ -112,12 +112,12 @@
             <mat-label>Choose a date</mat-label>
             <input matInput [matDatepicker]="departureDatePicker" formControlName="departureDate">
             <mat-datepicker-toggle matSuffix [for]="departureDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #departureDatePicker></mat-datepicker>
+            <mat-datepicker #departureDatePicker disabled="false"></mat-datepicker>
           </mat-form-field>
           <div class="trip-departure-datetime-row-spacing"></div>
           <mat-form-field appearance="fill">
             <mat-label>Choose a Time</mat-label>
-            <input matInput [ngxTimepicker]="departureTimePicker" formControlName="departureTime">
+            <input matInput [ngxTimepicker]="departureTimePicker" formControlName="departureTime" [disableClick]="true" readonly>
             <ngx-material-timepicker-toggle matSuffix [for]="departureTimePicker" style="fill: white">
             </ngx-material-timepicker-toggle>
             <ngx-material-timepicker #departureTimePicker></ngx-material-timepicker>
@@ -132,12 +132,12 @@
               <mat-label>Choose a date</mat-label>
               <input matInput [matDatepicker]="arrivalDatePicker" formControlName="arrivalDate">
               <mat-datepicker-toggle matSuffix [for]="arrivalDatePicker"></mat-datepicker-toggle>
-              <mat-datepicker #arrivalDatePicker></mat-datepicker>
+              <mat-datepicker #arrivalDatePicker disabled="false"></mat-datepicker>
             </mat-form-field>
             <div class="trip-departure-datetime-row-spacing"></div>
             <mat-form-field appearance="fill">
               <mat-label>Choose a Time</mat-label>
-              <input matInput [ngxTimepicker]="arrivalTimePicker" formControlName="arrivalTime">
+              <input matInput [ngxTimepicker]="arrivalTimePicker" formControlName="arrivalTime" [disableClick]="true" readonly>
               <ngx-material-timepicker-toggle matSuffix [for]="arrivalTimePicker" style="fill: white">
               </ngx-material-timepicker-toggle>
               <ngx-material-timepicker #arrivalTimePicker></ngx-material-timepicker>
@@ -206,7 +206,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Package</mat-label>
         <mat-select formControlName="servicePackages" multiple>
-          <mat-option *ngFor="let pack of packagesList" [value]="pack">
+          <mat-option *ngFor="let pack of packagesList" [value]="pack.id">
             {{pack.title}}
           </mat-option>
         </mat-select>
@@ -218,10 +218,13 @@
     <mat-list>
       <mat-list-item *ngFor="let i of tripServicesList; let j=index">
         <div class="trip-itinerary-package-list-item">
-          <h3 class="list-item-text">{{i.trip_service.title + ': ' + i.trip_service.description + ' at ' + i.value}}</h3>
+          <h3
+            class="list-item-text">{{i.trip_service.title + ': ' + i.trip_service.description + ' at ' + i.value}}</h3>
           <div class="list-item-text" style="display: flex; flex-direction: row; justify-content: center">
             <ng-container *ngFor="let y of i.packages">
-              <h3>{{y.title}}</h3>
+              <ng-container *ngFor="let pack of packagesList">
+                <h3 *ngIf="y == pack.id">{{pack.title}}</h3>
+              </ng-container>
             </ng-container>
           </div>
           <div class="list-item-actions">
@@ -248,7 +251,7 @@
         <mat-label>Choose a date</mat-label>
         <input matInput [matDatepicker]="itineraryDatePicker" formControlName="itineraryDate">
         <mat-datepicker-toggle matSuffix [for]="itineraryDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #itineraryDatePicker></mat-datepicker>
+        <mat-datepicker #itineraryDatePicker disabled="false"></mat-datepicker>
       </mat-form-field>
       <h4>Group:</h4>
       <mat-form-field appearance="fill">
@@ -263,8 +266,9 @@
       <mat-form-field appearance="fill">
         <mat-label>Departures</mat-label>
         <mat-select multiple formControlName="itineraryDepartures">
-          <mat-option *ngFor="let departure of departuresList"
-                      [value]="departure">{{departure.location + ' Via ' + departure.via}}</mat-option>
+          <mat-option *ngFor="let departure of departuresList" [value]="departure.id">
+            {{departure.location + ' Via ' + departure.via}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -295,17 +299,17 @@
                              (closed)="panelOpenState = false">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              Day {{j + 1}}
+              {{i.date | date}}
             </mat-panel-title>
             <mat-panel-description>{{i.group}}</mat-panel-description>
           </mat-expansion-panel-header>
           <div class="trip-itinerary-list-item-content">
             <div>
-              <p>Date: {{i.date | date}}</p>
               <p>Body: {{i.body}}</p>
               <h2>Departures</h2>
               <ng-container *ngFor="let y of i.departures">
-                <p>{{y.location + ' via ' + y.via}}</p>
+                <ng-container *ngFor="let departure of departuresList">
+                  <p *ngIf="y == departure.id">{{departure.location + ' via ' + departure.via}}</p></ng-container>
               </ng-container>
               <h2>Services</h2>
               <ng-container *ngFor="let y of i.trip_service_values">
