@@ -2,6 +2,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -21,12 +22,16 @@ import {AppComponent} from './app.component';
 import {AddTripComponent} from './add-trip/add-trip.component';
 import {HomepageComponent} from './homepage/homepage.component';
 import {DatePipe} from '@angular/common';
+import { SignInComponent } from './sign-in/sign-in.component';
+import { TripsComponent } from './trips/trips.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddTripComponent,
-    HomepageComponent
+    HomepageComponent,
+    SignInComponent,
+    TripsComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +48,7 @@ import {DatePipe} from '@angular/common';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatCardModule,
     NgxMaterialTimepickerModule,
     MatExpansionModule,
     ReactiveFormsModule,
