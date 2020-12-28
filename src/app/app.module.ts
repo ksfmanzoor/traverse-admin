@@ -1,6 +1,6 @@
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -14,6 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {AppRoutingModule} from 'src/app/app-routing.module';
@@ -53,6 +54,8 @@ import {TripsComponent} from './trips/trips.component';
     NgxMaterialTimepickerModule,
     MatExpansionModule,
     ReactiveFormsModule,
+    FormsModule,
+    LoadingBarHttpClientModule
   ],
   providers: [DatePipe, {
     provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptorService, multi: true
