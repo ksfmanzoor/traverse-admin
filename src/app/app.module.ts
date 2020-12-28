@@ -1,4 +1,4 @@
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -17,13 +17,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {AppRoutingModule} from 'src/app/app-routing.module';
+import {AuthenticationInterceptorService} from 'src/app/services/authentication-interceptor.service';
 
 import {AppComponent} from './app.component';
 import {AddTripComponent} from './add-trip/add-trip.component';
 import {HomepageComponent} from './homepage/homepage.component';
 import {DatePipe} from '@angular/common';
-import { SignInComponent } from './sign-in/sign-in.component';
-import { TripsComponent } from './trips/trips.component';
+import {SignInComponent} from './sign-in/sign-in.component';
+import {TripsComponent} from './trips/trips.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,9 @@ import { TripsComponent } from './trips/trips.component';
     MatExpansionModule,
     ReactiveFormsModule,
   ],
-  providers: [DatePipe, ],
+  providers: [DatePipe, {
+    provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptorService, multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {
