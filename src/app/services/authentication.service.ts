@@ -41,8 +41,7 @@ export class AuthenticationService {
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.currentUserSubject.next(user);
         this.verifiedUser = user.is_verified;
-        this.router.navigate(['/']).then();
-        return user;
+        this.router.navigate(['/home']).then();
       });
     }));
   }

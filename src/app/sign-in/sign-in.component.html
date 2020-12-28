@@ -4,13 +4,13 @@
       <h1 class="login-card-title">Login</h1>
       <mat-form-field class="login-card-input">
         <mat-label>Email</mat-label>
-        <input matInput name="email">
+        <input matInput name="email" [(ngModel)]="loginData.email" type="email">
       </mat-form-field>
       <mat-form-field class="login-card-input">
         <mat-label>Password</mat-label>
-        <input matInput name="password">
+        <input matInput name="password" [(ngModel)]="loginData.password" type="password">
       </mat-form-field>
-      <button mat-raised-button class="login-card-action-button" color="warn" routerLink="/home">LOGIN</button>
+      <button mat-raised-button class="login-card-action-button" color="warn" (click)="signInUser()">LOGIN</button>
     </div>
   </mat-card>
 </div>
