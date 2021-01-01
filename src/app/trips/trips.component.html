@@ -2,3 +2,19 @@
   <h2>Trips</h2>
   <button mat-button routerLink="/add-trip">Add Trip</button>
 </mat-toolbar>
+<mat-list>
+  <mat-list-item *ngFor="let i of minifiedTrips;">
+    <div class="trip-list-items">
+      <h3 class="list-item-text">{{i.title}}</h3>
+      <div class="list-item-actions">
+        <button mat-icon-button (click)="updateTrip(i.slug)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="removeTrip(i.slug)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </mat-list-item>
+</mat-list>

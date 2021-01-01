@@ -4,3 +4,16 @@
   top: 0;
   z-index: 2;
 }
+
+.trip-list-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  h3 {
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+}
