@@ -21,7 +21,7 @@ export class TripsService {
     return this.httpClient.get(this.tripUrl + slug);
   }
 
-  getTripBasedServices(id) {
+  getTripBasedServices(id: string) {
     return this.httpClient.get(this.servicesUrl + id);
   }
 
@@ -29,11 +29,11 @@ export class TripsService {
     return this.httpClient.patch(this.tripUrl + slug + '/', updatedTrip);
   }
 
-  deleteTrip(slug) {
-    return this.httpClient.delete(this.tripUrl);
+  deleteTrip(slug: string) {
+    return this.httpClient.delete(this.tripUrl + slug + '/');
   }
 
-  deleteGalleryImage(id) {
+  deleteGalleryImage(id: string) {
     return this.httpClient.delete(this.deleteGalleyImageUrl + id);
   }
 }

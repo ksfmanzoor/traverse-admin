@@ -2,7 +2,7 @@ import {DatePipe, formatDate} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {ReplaySubject} from 'rxjs';
 import {Attraction, Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
@@ -52,7 +52,7 @@ export class AddTripComponent implements OnInit {
   private images = [];
 
   constructor(private route: ActivatedRoute, private tripsService: TripsService,
-              private datePipe: DatePipe, private utilityService: UtilityService) {}
+              private datePipe: DatePipe, private utilityService: UtilityService, private router: Router) {}
 
   ngOnInit() {
     if (isNotNullOrUndefined(history.state.tripData)) {
@@ -310,10 +310,12 @@ export class AddTripComponent implements OnInit {
     if (this.isEditMode) {
       this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
         alert('Trip updated successfully');
+        this.router.navigate(['/trips']).then();
       });
     } else {
       this.tripsService.postTrip(trip).subscribe(() => {
         alert('Trip added successfully');
+        this.router.navigate(['/trips']).then();
       });
     }
   }
