@@ -19,9 +19,11 @@ export class TripsComponent implements OnInit {
     });
   }
 
-  updateTrip(slug: string) {
-    this.tripsService.getTrip(slug).subscribe(data => {
-      this.router.navigate(['/add-trip'], {state: {tripData: data}}).then();
+  updateTrip(slug: string, id) {
+    this.tripsService.getTrip(slug).subscribe(tripData => {
+      this.tripsService.getTripBasedServices(id).subscribe(tripServices => {
+        this.router.navigate(['/add-trip'], {state: {tripData, tripServices}}).then();
+      });
     });
   }
 

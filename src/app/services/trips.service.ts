@@ -8,6 +8,8 @@ import {environment} from 'src/environments/environment';
 })
 export class TripsService {
   tripUrl = `${environment.baseUrl}traverse/trip/`;
+  servicesUrl = `${environment.baseUrl}traverse/service/value/trip/?trip=`;
+  deleteGalleyImageUrl = `${environment.baseUrl}traverse/gallery/image/`;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -19,7 +21,19 @@ export class TripsService {
     return this.httpClient.get(this.tripUrl + slug);
   }
 
+  getTripBasedServices(id) {
+    return this.httpClient.get(this.servicesUrl + id);
+  }
+
+  updateTrip(slug: string, updatedTrip: Trip) {
+    return this.httpClient.patch(this.tripUrl + slug + '/', updatedTrip);
+  }
+
   deleteTrip(slug) {
     return this.httpClient.delete(this.tripUrl);
+  }
+
+  deleteGalleryImage(id) {
+    return this.httpClient.delete(this.deleteGalleyImageUrl + id);
   }
 }

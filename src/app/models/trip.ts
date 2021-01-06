@@ -1,4 +1,5 @@
 export interface Trip {
+  id?: string;
   title: string;
   slug: string;
   overview: string;
@@ -49,9 +50,13 @@ export interface Departure {
 }
 
 export interface GalleryImage {
+  id?: string;
   image: string;
+  alt_text?: string;
 }
 
 export interface Attraction {
   id: string;
+  title: string;
 }
+

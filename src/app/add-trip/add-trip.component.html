@@ -1,6 +1,6 @@
 <mat-toolbar class="trip-toolbar">
   <h2>Add Trip</h2>
-  <button mat-button (click)="addTrip()">Done</button>
+  <button mat-button (click)="addTrip()">{{isEditMode ? 'Update': 'Add'}}</button>
 </mat-toolbar>
 <form [formGroup]="addTripForm">
   <div class="trip-info-section">
@@ -33,7 +33,7 @@
             <ngx-mat-select-search [formControl]="attractionsMultiFilterCtrl"
                                    [placeholderLabel]="'Search'"></ngx-mat-select-search>
           </mat-option>
-          <mat-option *ngFor="let attraction of filteredAttractions | async" [value]="{'id': attraction.id}">
+          <mat-option *ngFor="let attraction of filteredAttractions | async" [value]="attraction.id">
             {{attraction.title}}
           </mat-option>
         </mat-select>
@@ -117,7 +117,8 @@
           <div class="trip-departure-datetime-row-spacing"></div>
           <mat-form-field appearance="fill">
             <mat-label>Choose a Time</mat-label>
-            <input matInput [ngxTimepicker]="departureTimePicker" formControlName="departureTime" [disableClick]="true" readonly>
+            <input matInput [ngxTimepicker]="departureTimePicker" formControlName="departureTime" [disableClick]="true"
+                   readonly>
             <ngx-material-timepicker-toggle matSuffix [for]="departureTimePicker" style="fill: white">
             </ngx-material-timepicker-toggle>
             <ngx-material-timepicker #departureTimePicker></ngx-material-timepicker>
@@ -137,7 +138,8 @@
             <div class="trip-departure-datetime-row-spacing"></div>
             <mat-form-field appearance="fill">
               <mat-label>Choose a Time</mat-label>
-              <input matInput [ngxTimepicker]="arrivalTimePicker" formControlName="arrivalTime" [disableClick]="true" readonly>
+              <input matInput [ngxTimepicker]="arrivalTimePicker" formControlName="arrivalTime" [disableClick]="true"
+                     readonly>
               <ngx-material-timepicker-toggle matSuffix [for]="arrivalTimePicker" style="fill: white">
               </ngx-material-timepicker-toggle>
               <ngx-material-timepicker #arrivalTimePicker></ngx-material-timepicker>
@@ -338,8 +340,21 @@
       <h4>Images: </h4>
       <input type="file" multiple (change)="onFileChange($event)">
     </div>
-  </div>
-  <div class="trip-divider-spacing">
-    <mat-divider></mat-divider>
+    <ng-container  *ngIf="isEditMode">
+      <h3>Images</h3>
+      <mat-list>
+        <mat-list-item *ngFor="let i of editTripData.gallery_images;">
+          <div class="gallery-images-list-items">
+            <a class="list-item-text" href="{{i.image}}" target="_blank">{{i.image}}</a>
+            <div class="list-item-actions">
+              <button mat-icon-button (click)="removeGalleryImage(i.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </ng-container>
   </div>
 </form>

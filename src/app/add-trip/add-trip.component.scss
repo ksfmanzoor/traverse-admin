@@ -233,6 +233,19 @@
   }
 }
 
+.gallery-images-list-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  a {
+    font-size: 14px;
+    color: white;
+  }
+}
+
 .list-item-text {
   width: 33.33%;
   text-overflow: ellipsis;

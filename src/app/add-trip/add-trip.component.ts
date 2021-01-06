@@ -1,14 +1,14 @@
-import {formatDate} from '@angular/common';
+import {DatePipe, formatDate} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
 import {ActivatedRoute} from '@angular/router';
+import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {ReplaySubject} from 'rxjs';
-import {Attraction} from 'src/app/models/attraction';
-import {Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
-import {CreateTripService} from 'src/app/services/create-trip.service';
+import {Attraction, Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
+import {TripsService} from 'src/app/services/trips.service';
+import {UtilityService} from 'src/app/services/utility.service';
 import {v4 as uuid4} from 'uuid';
-import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-add-trip',
@@ -17,8 +17,9 @@ import {DatePipe} from '@angular/common';
 })
 export class AddTripComponent implements OnInit {
   addTripForm: FormGroup;
-  title = 'traverse-admin';
+  editTripData: Trip;
   panelOpenState = false;
+  isEditMode = false;
   groupList: string[] = ['pre', 'common', 'post'];
   availableLocations = [
     {value: 'Islamabad', viewValue: 'Islamabad'},
@@ -43,25 +44,37 @@ export class AddTripComponent implements OnInit {
   isServiceEditMode = false;
   isItineraryEditMode = false;
 
-
+  tripAttractionsIds: string[] = [];
   attractionsMultiFilterCtrl: FormControl = new FormControl();
   filteredAttractions: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
 
   @ViewChild('multiSelect', {static: true}) multiSelect: MatSelect;
   private images = [];
 
-  constructor(private route: ActivatedRoute, private createTripService: CreateTripService, private datePipe: DatePipe) {}
+  constructor(private route: ActivatedRoute, private tripsService: TripsService,
+              private datePipe: DatePipe, private utilityService: UtilityService) {}
 
   ngOnInit() {
+    if (isNotNullOrUndefined(history.state.tripData)) {
+      this.isEditMode = true;
+      this.editTripData = history.state.tripData;
+      this.packagesList = this.editTripData.packages;
+      this.departuresList = this.editTripData.departures;
+      this.itineraryDaysList = this.editTripData.itinerary_days;
+      this.tripServicesList = history.state.tripServices;
+      this.tripAttractionsIds = this.editTripData.attractions.map((e) => {
+        return this.utilityService.propertyRemover(e, 'id').id;
+      });
+    }
     this.route.data.subscribe(data => {
-      this.allAttractions = data.attractions;
-      this.allTripServices = data.tripServices;
+      this.allAttractions = data.initialTripData[0];
+      this.allTripServices = data.initialTripData[1];
     });
     this.addTripForm = new FormGroup({
-        tripTitle: new FormControl(''),
-        slug: new FormControl(''),
-        overview: new FormControl(''),
-        attractions: new FormControl(),
+        tripTitle: new FormControl(this.isEditMode ? this.editTripData.title : ''),
+        slug: new FormControl(this.isEditMode ? this.editTripData.slug : ''),
+        overview: new FormControl(this.isEditMode ? this.editTripData.overview : ''),
+        attractions: new FormControl(this.tripAttractionsIds),
         packageTitle: new FormControl(''),
         packagePrice: new FormControl(''),
         packageStandard: new FormControl(false),
@@ -81,10 +94,9 @@ export class AddTripComponent implements OnInit {
         itineraryDepartures: new FormControl(''),
         itineraryBody: new FormControl(''),
         itineraryServices: new FormControl(''),
-        galleryImages: new FormControl(''),
+        galleryImages: new FormControl([]),
       }
     );
-
     this.filteredAttractions.next(this.allAttractions.slice());
 
     this.attractionsMultiFilterCtrl.valueChanges
@@ -150,9 +162,9 @@ export class AddTripComponent implements OnInit {
       location: this.formControl.departureLocation.value,
       via: this.formControl.departureVia.value,
       price_per_person: this.formControl.departurePrice.value,
-      departure_date: this.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
+      departure_date: this.utilityService.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
         this.formControl.departureTime.value).toISOString(),
-      arrival_date: this.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
+      arrival_date: this.utilityService.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
         this.formControl.arrivalTime.value).toISOString(),
       is_standard: this.formControl.departureStandard.value
     };
@@ -189,6 +201,7 @@ export class AddTripComponent implements OnInit {
     this.departuresList.splice(index, 1);
 
   }
+
 
   addTripService() {
     const service: TripServiceValue = {
@@ -274,13 +287,11 @@ export class AddTripComponent implements OnInit {
     }
   }
 
-  dateAndTimeCombiner(date, time): Date {
-    const t1: any = time.split(' ');
-    const t2: any = t1[0].split(':');
-    t2[0] = (t1[1] === 'PM' ? (1 * t2[0] + 12) : t2[0]);
-    const time24 = (t2[0] < 10 ? '0' + t2[0] : t2[0]) + ':' + t2[1];
-    const completeDate = date.replace('00:00', time24.toString());
-    return new Date(completeDate);
+
+  removeGalleryImage(id) {
+    this.tripsService.deleteGalleryImage(id).subscribe(() => {
+      alert('Image deleted successfully');
+    });
   }
 
   addTrip() {
@@ -288,14 +299,22 @@ export class AddTripComponent implements OnInit {
       title: this.formControl.tripTitle.value,
       slug: this.formControl.slug.value,
       overview: this.formControl.overview.value,
-      attractions: this.formControl.attractions.value,
+      attractions: this.formControl.attractions.value.map((e: string) => {
+        return {id: e};
+      }),
       packages: this.packagesList,
       departures: this.departuresList,
       itinerary_days: this.itineraryDaysList,
       gallery_images: this.formControl.galleryImages.value
     };
-    this.createTripService.postTrip(trip).subscribe(data => {
-      console.log(data);
-    });
+    if (this.isEditMode) {
+      this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
+        alert('Trip updated successfully');
+      });
+    } else {
+      this.tripsService.postTrip(trip).subscribe(() => {
+        alert('Trip added successfully');
+      });
+    }
   }
 }
