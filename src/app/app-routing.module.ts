@@ -3,8 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AddTripComponent} from 'src/app/add-trip/add-trip.component';
 import {HomepageComponent} from 'src/app/homepage/homepage.component';
 import {GetAllTripsResolverService} from 'src/app/services/get-all-trips-resolver.service';
-import {GetAttractionsResolverService} from 'src/app/services/get-attractions-resolver.service';
-import {GetTripServicesResolverService} from 'src/app/services/get-trip-services-resolver.service';
+import {GetInitialTripDataResolverService} from 'src/app/services/get-initial-trip-data-resolver.service';
 import {AuthGuard} from 'src/app/services/guards/auth.guard';
 import {SignInComponent} from 'src/app/sign-in/sign-in.component';
 import {TripsComponent} from 'src/app/trips/trips.component';
@@ -26,9 +25,9 @@ const routes: Routes = [
   {
     path: 'add-trip',
     component: AddTripComponent,
-    resolve: {attractions: GetAttractionsResolverService, tripServices: GetTripServicesResolverService},
+    resolve: {initialTripData: GetInitialTripDataResolverService},
     canActivate: [AuthGuard]
-  }
+  },
 ];
 
 @NgModule({
