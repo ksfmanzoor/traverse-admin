@@ -7,8 +7,11 @@
     <div class="trip-list-items">
       <h3 class="list-item-text">{{i.title}}</h3>
       <div class="list-item-actions">
-        <button mat-icon-button (click)="updateTrip(i.slug, i.id)">
+        <button mat-icon-button (click)="fetchTrip(i.slug, i.id, true)">
           <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="fetchTrip(i.slug, i.id, false)">
+          <mat-icon>content_copy</mat-icon>
         </button>
         <button mat-icon-button (click)="removeTrip(i.slug)">
           <mat-icon>delete</mat-icon>

@@ -19,15 +19,17 @@ export class TripsComponent implements OnInit {
     });
   }
 
-  updateTrip(slug: string, id) {
+  fetchTrip(slug: string, id: string, isEditMode: boolean) {
     this.tripsService.getTrip(slug).subscribe(tripData => {
       this.tripsService.getTripBasedServices(id).subscribe(tripServices => {
-        this.router.navigate(['/add-trip'], {state: {tripData, tripServices}}).then();
+        this.router.navigate(['/add-trip'], {state: {isEdit: isEditMode, tripData, tripServices}}).then();
       });
     });
   }
 
   removeTrip(slug: string) {
-    this.tripsService.deleteTrip(slug).subscribe();
+    this.tripsService.deleteTrip(slug).subscribe(() => {
+      this.router.navigate(['/trips']).then();
+    });
   }
 }

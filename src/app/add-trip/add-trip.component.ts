@@ -20,6 +20,7 @@ export class AddTripComponent implements OnInit {
   editTripData: Trip;
   panelOpenState = false;
   isEditMode = false;
+  isDuplicateMode = false;
   groupList: string[] = ['pre', 'common', 'post'];
   availableLocations = [
     {value: 'Islamabad', viewValue: 'Islamabad'},
@@ -56,7 +57,11 @@ export class AddTripComponent implements OnInit {
 
   ngOnInit() {
     if (isNotNullOrUndefined(history.state.tripData)) {
-      this.isEditMode = true;
+      if (history.state.isEdit) {
+        this.isEditMode = true;
+      } else {
+        this.isDuplicateMode = true;
+      }
       this.editTripData = history.state.tripData;
       this.packagesList = this.editTripData.packages;
       this.departuresList = this.editTripData.departures;
@@ -71,9 +76,9 @@ export class AddTripComponent implements OnInit {
       this.allTripServices = data.initialTripData[1];
     });
     this.addTripForm = new FormGroup({
-        tripTitle: new FormControl(this.isEditMode ? this.editTripData.title : ''),
+        tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : ''),
         slug: new FormControl(this.isEditMode ? this.editTripData.slug : ''),
-        overview: new FormControl(this.isEditMode ? this.editTripData.overview : ''),
+        overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : ''),
         attractions: new FormControl(this.tripAttractionsIds),
         packageTitle: new FormControl(''),
         packagePrice: new FormControl(''),
