@@ -6,6 +6,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -26,6 +27,7 @@ import {HomepageComponent} from './homepage/homepage.component';
 import {DatePipe} from '@angular/common';
 import {SignInComponent} from './sign-in/sign-in.component';
 import {TripsComponent} from './trips/trips.component';
+import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,30 +35,32 @@ import {TripsComponent} from './trips/trips.component';
     AddTripComponent,
     HomepageComponent,
     SignInComponent,
-    TripsComponent
+    TripsComponent,
+    AlertDialogComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatToolbarModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatListModule,
-    MatIconModule,
-    NgxMatSelectSearchModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatCardModule,
-    NgxMaterialTimepickerModule,
-    MatExpansionModule,
-    ReactiveFormsModule,
-    FormsModule,
-    LoadingBarHttpClientModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatToolbarModule,
+        AppRoutingModule,
+        HttpClientModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatListModule,
+        MatIconModule,
+        NgxMatSelectSearchModule,
+        MatSelectModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatCardModule,
+        NgxMaterialTimepickerModule,
+        MatExpansionModule,
+        ReactiveFormsModule,
+        FormsModule,
+        LoadingBarHttpClientModule,
+        MatDialogModule
+    ],
   providers: [DatePipe, {
     provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptorService, multi: true
   }],

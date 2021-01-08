@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
+import {AlertDialogComponent} from 'src/app/alert-dialog/alert-dialog.component';
 import {MinifiedTrip} from 'src/app/models/minified-trip';
 import {TripsService} from 'src/app/services/trips.service';
 
@@ -11,7 +13,7 @@ import {TripsService} from 'src/app/services/trips.service';
 export class TripsComponent implements OnInit {
   minifiedTrips: MinifiedTrip[];
 
-  constructor(private route: ActivatedRoute, private tripsService: TripsService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private tripsService: TripsService, private router: Router, private matDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -27,9 +29,7 @@ export class TripsComponent implements OnInit {
     });
   }
 
-  removeTrip(slug: string) {
-    this.tripsService.deleteTrip(slug).subscribe(() => {
-      this.router.navigate(['/trips']).then();
-    });
+  openDeleteDialog(slug: string) {
+    this.matDialog.open(AlertDialogComponent, {data: {slug}});
   }
 }
