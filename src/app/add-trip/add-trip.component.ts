@@ -274,6 +274,7 @@ export class AddTripComponent implements OnInit {
 
 
   onFileChange(event) {
+    this.images = [];
     if (event.target.files && event.target.files[0]) {
       const filesAmount = event.target.files.length;
       for (let i = 0; i < filesAmount; i++) {
@@ -310,7 +311,7 @@ export class AddTripComponent implements OnInit {
       packages: this.packagesList,
       departures: this.departuresList,
       itinerary_days: this.itineraryDaysList,
-      gallery_images: this.formControl.galleryImages.value
+      gallery_images: this.images
     };
     if (this.isEditMode) {
       this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
