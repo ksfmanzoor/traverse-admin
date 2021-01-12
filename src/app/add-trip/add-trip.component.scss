@@ -105,6 +105,26 @@
   padding: 40px 0 20px 0;
 }
 
+.trip-departure-packages-section {
+  h3 {
+    font-size: 18px;
+    margin: 20px;
+  }
+}
+
+.trip-departure-packages-add-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+
+  button {
+    margin-bottom: 16px;
+  }
+}
+
+
 .trip-departure-section {
   h3 {
     font-size: 18px;

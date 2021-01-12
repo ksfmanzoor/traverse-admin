@@ -1,6 +1,6 @@
 <mat-toolbar class="trip-toolbar">
   <h2>Add Trip</h2>
-  <button mat-button (click)="addTrip()">{{isEditMode ? 'Update': 'Add'}}</button>
+  <button mat-button (click)="addTrip()">{{isEditMode ? 'Update' : 'Add'}}</button>
 </mat-toolbar>
 <form [formGroup]="addTripForm">
   <div class="trip-info-section">
@@ -81,6 +81,48 @@
   <div class="trip-divider-spacing">
     <mat-divider></mat-divider>
   </div>
+  <div class="trip-departure-packages-section">
+    <h3>Add Departure Package</h3>
+    <div class="trip-departure-packages-add-row">
+      <h4>Package: </h4>
+      <mat-form-field appearance="fill">
+        <mat-label>Package</mat-label>
+        <mat-select formControlName="departurePackage">
+          <mat-option *ngFor="let pack of packagesList" [value]="pack.id">
+            {{pack.title}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h4>Price per Person: </h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Value</mat-label>
+        <input matInput formControlName="departurePackagePrice">
+      </mat-form-field>
+      <button mat-raised-button color="warn"
+              (click)="addDeparturePackage()">{{isDeparturePackageEditMode ? 'Update' : 'Add'}}</button>
+    </div>
+    <h3>Departure Packages</h3>
+    <mat-list>
+      <mat-list-item *ngFor="let i of departurePackagesList; let j=index">
+        <div class="trip-itinerary-package-list-item">
+          <h3 class="list-item-text">{{utilityService.packageNameFinder(packagesList, i.package)}}</h3>
+          <h3 class="list-item-text center-align">{{i.price_per_person}}</h3>
+          <div class="list-item-actions">
+            <button mat-icon-button (click)="updateDeparturePackage(i, j)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteDeparturePackage(j)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div class="trip-divider-spacing">
+    <mat-divider></mat-divider>
+  </div>
   <div class="trip-departure-section">
     <h3>Add Departure</h3>
     <div class="trip-add-departure-row">
@@ -98,10 +140,15 @@
         <mat-label>Via</mat-label>
         <input matInput formControlName="departureVia">
       </mat-form-field>
-      <h4>Price per Person:</h4>
-      <mat-form-field appearance="outline">
-        <mat-label>Price per Person</mat-label>
-        <input matInput formControlName="departurePrice">
+      <h4>Departure Package: </h4>
+      <mat-form-field appearance="fill">
+        <mat-label>Location</mat-label>
+        <mat-select formControlName="departurePackages" multiple>
+          <mat-option *ngFor="let departurePackage of departurePackagesList" [value]="departurePackage">
+            {{utilityService.packageNameFinder(packagesList, departurePackage.package) + ' - Rs.'
+            + departurePackage.price_per_person}}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
     <div class="trip-add-departure-row">
@@ -167,9 +214,13 @@
           <div class="trip-departures-list-item-content">
             <div>
               <p>via: {{i.via}}</p>
-              <p>Price Per Person: {{i.price_per_person}}</p>
               <p>Departure Date & Time: {{i.departure_date | date: 'medium'}}</p>
               <p>Arrival Date & time: {{i.arrival_date | date: 'medium'}}</p>
+              <h2>Departure Packages</h2>
+              <ng-container *ngFor="let y of i.departure_packages">
+                <p>Departure Package is {{utilityService.packageNameFinder(packagesList, y.package)}} at
+                  price Rs.{{y.price_per_person}}</p>
+              </ng-container>
             </div>
             <div>
               <button mat-icon-button (click)="updateDeparture(i, j)">
@@ -340,7 +391,7 @@
       <h4>Images: </h4>
       <input type="file" multiple (change)="onFileChange($event)">
     </div>
-    <ng-container  *ngIf="isEditMode">
+    <ng-container *ngIf="isEditMode">
       <h3>Images</h3>
       <mat-list>
         <mat-list-item *ngFor="let i of editTripData.gallery_images;">

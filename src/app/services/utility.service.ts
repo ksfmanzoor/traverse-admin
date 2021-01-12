@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Package} from 'src/app/models/trip';
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +21,9 @@ export class UtilityService {
     const copy = {} as Pick<T, K>;
     keys.forEach(key => copy[key] = obj[key]);
     return copy;
+  }
+
+  packageNameFinder(packageList: Package[], id: string): string {
+    return packageList.find(e => e.id === id).title;
   }
 }
