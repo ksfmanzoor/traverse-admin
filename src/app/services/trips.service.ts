@@ -9,6 +9,7 @@ import {environment} from 'src/environments/environment';
 export class TripsService {
   tripUrl = `${environment.baseUrl}traverse/trip/`;
   servicesUrl = `${environment.baseUrl}traverse/service/value/trip/?trip=`;
+  departurePackageUrl = `${environment.baseUrl}traverse/departure/package/trip/?trip=`;
   deleteGalleyImageUrl = `${environment.baseUrl}traverse/gallery/image/`;
 
   constructor(private httpClient: HttpClient) { }
@@ -23,6 +24,10 @@ export class TripsService {
 
   getTripBasedServices(id: string) {
     return this.httpClient.get(this.servicesUrl + id);
+  }
+
+  getTripBasedDeparturePackages(id: string) {
+    return this.httpClient.get(this.departurePackageUrl + id);
   }
 
   updateTrip(slug: string, updatedTrip: Trip) {

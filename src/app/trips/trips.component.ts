@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
+import {forkJoin} from 'rxjs';
 import {AlertDialogComponent} from 'src/app/alert-dialog/alert-dialog.component';
 import {MinifiedTrip} from 'src/app/models/minified-trip';
 import {TripsService} from 'src/app/services/trips.service';
@@ -23,8 +24,17 @@ export class TripsComponent implements OnInit {
 
   fetchTrip(slug: string, id: string, isEditMode: boolean) {
     this.tripsService.getTrip(slug).subscribe(tripData => {
-      this.tripsService.getTripBasedServices(id).subscribe(tripServices => {
-        this.router.navigate(['/add-trip'], {state: {isEdit: isEditMode, tripData, tripServices}}).then();
+      forkJoin([this.tripsService.getTripBasedServices(id),
+        this.tripsService.getTripBasedDeparturePackages(id)]).subscribe(tripInitialData => {
+          console.log(tripInitialData);
+        this.router.navigate(['/add-trip'], {
+          state: {
+            isEdit: isEditMode,
+            tripData,
+            tripServices: tripInitialData[0],
+            tripDeparturePackages: tripInitialData[1]
+          }
+        }).then();
       });
     });
   }

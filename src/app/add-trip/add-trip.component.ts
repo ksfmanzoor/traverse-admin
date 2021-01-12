@@ -70,6 +70,7 @@ export class AddTripComponent implements OnInit {
       this.departuresList = this.editTripData.departures;
       this.itineraryDaysList = this.editTripData.itinerary_days;
       this.tripServicesList = history.state.tripServices;
+      this.departurePackagesList = history.state.tripDeparturePackages;
       this.tripAttractionsIds = this.editTripData.attractions.map((e) => {
         return this.utilityService.propertyRemover(e, 'id').id;
       });
