@@ -10,12 +10,14 @@
       <mat-form-field appearance="outline">
         <mat-label>Title</mat-label>
         <input matInput formControlName="tripTitle">
+        <mat-error *ngIf="formControl.tripTitle.hasError('required')">Title is required</mat-error>
       </mat-form-field>
       <h4>Slug:</h4>
       <mat-form-field appearance="outline">
         <mat-label>Slug</mat-label>
         <input matInput formControlName="slug">
         <mat-hint>Hint: Should be in Lower Case</mat-hint>
+        <mat-error *ngIf="formControl.slug.hasError('required')">Slug is required</mat-error>
       </mat-form-field>
     </div>
     <div class="trip-add-overview-row">
@@ -23,6 +25,7 @@
       <mat-form-field appearance="outline">
         <mat-label></mat-label>
         <textarea matInput rows="10" formControlName="overview"></textarea>
+        <mat-error *ngIf="formControl.overview.hasError('required')">Overview is required</mat-error>
       </mat-form-field>
     </div>
     <div class="trip-add-attractions-row">
@@ -37,6 +40,7 @@
             {{attraction.title}}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="formControl.attractions.hasError('required')">Attractions is required</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -55,6 +59,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Price per Person</mat-label>
         <input matInput formControlName="packagePrice">
+        <mat-error *ngIf="formControl.packagePrice  .hasError('pattern')">Only numbers are allowed</mat-error>
       </mat-form-field>
       <mat-checkbox formControlName="packageStandard">is Standard</mat-checkbox>
       <button mat-raised-button color="warn" (click)="addPackage()">{{isPackageEditMode ? 'Update' : 'Add'}}</button>
@@ -97,6 +102,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Value</mat-label>
         <input matInput formControlName="departurePackagePrice">
+        <mat-error *ngIf="formControl.departurePackagePrice.hasError('pattern')">Only numbers are allowed</mat-error>
       </mat-form-field>
       <button mat-raised-button color="warn"
               (click)="addDeparturePackage()">{{isDeparturePackageEditMode ? 'Update' : 'Add'}}</button>
@@ -390,6 +396,7 @@
     <div class="trip-add-gallery-images-row">
       <h4>Images: </h4>
       <input type="file" multiple (change)="onFileChange($event)">
+      <mat-error *ngIf="formControl.galleryImages.hasError('required')">Gallery images are required</mat-error>
     </div>
     <ng-container *ngIf="isEditMode">
       <h3>Images</h3>

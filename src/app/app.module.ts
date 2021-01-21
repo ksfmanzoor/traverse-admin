@@ -12,6 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatListModule} from '@angular/material/list';
 import {MatSelectModule} from '@angular/material/select';
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -27,7 +28,7 @@ import {HomepageComponent} from './homepage/homepage.component';
 import {DatePipe} from '@angular/common';
 import {SignInComponent} from './sign-in/sign-in.component';
 import {TripsComponent} from './trips/trips.component';
-import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
+import {AlertDialogComponent} from './alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -38,32 +39,33 @@ import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
     TripsComponent,
     AlertDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        AppRoutingModule,
-        HttpClientModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatButtonModule,
-        MatListModule,
-        MatIconModule,
-        NgxMatSelectSearchModule,
-        MatSelectModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatCardModule,
-        NgxMaterialTimepickerModule,
-        MatExpansionModule,
-        ReactiveFormsModule,
-        FormsModule,
-        LoadingBarHttpClientModule,
-        MatDialogModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    AppRoutingModule,
+    HttpClientModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
+    NgxMatSelectSearchModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatCardModule,
+    NgxMaterialTimepickerModule,
+    MatExpansionModule,
+    ReactiveFormsModule,
+    FormsModule,
+    LoadingBarHttpClientModule,
+    MatDialogModule,
+    MatSnackBarModule
+  ],
   providers: [DatePipe, {
     provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptorService, multi: true
-  }],
+  }, {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}}],
   bootstrap: [AppComponent]
 })
 export class AppModule {

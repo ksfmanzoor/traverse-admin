@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
 import {Package} from 'src/app/models/trip';
 
 @Injectable({
@@ -25,5 +26,16 @@ export class UtilityService {
 
   packageNameFinder(packageList: Package[], id: string): string {
     return packageList.find(e => e.id === id).title;
+  }
+
+  validateAllFormFields(formGroup: FormGroup) {
+    Object.keys(formGroup.controls).forEach(field => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({onlySelf: true});
+      } else if (control instanceof FormGroup) {
+        this.validateAllFormFields(control);
+      }
+    });
   }
 }

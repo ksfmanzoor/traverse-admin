@@ -1,7 +1,8 @@
 import {DatePipe, formatDate} from '@angular/common';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatSelect} from '@angular/material/select';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {ReplaySubject} from 'rxjs';
@@ -56,7 +57,7 @@ export class AddTripComponent implements OnInit {
   private images = [];
 
   constructor(private route: ActivatedRoute, private tripsService: TripsService,
-              private datePipe: DatePipe, public utilityService: UtilityService, private router: Router) {}
+              private datePipe: DatePipe, public utilityService: UtilityService, private router: Router, private snackBar: MatSnackBar) {}
 
   ngOnInit() {
     if (isNotNullOrUndefined(history.state.tripData)) {
@@ -80,19 +81,19 @@ export class AddTripComponent implements OnInit {
       this.allTripServices = data.initialTripData[1];
     });
     this.addTripForm = new FormGroup({
-        tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : ''),
-        slug: new FormControl(this.isEditMode ? this.editTripData.slug : ''),
-        overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : ''),
-        attractions: new FormControl(this.tripAttractionsIds),
+        tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : '', [Validators.required]),
+        slug: new FormControl(this.isEditMode ? this.editTripData.slug : '', [Validators.required]),
+        overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : '', [Validators.required]),
+        attractions: new FormControl(this.tripAttractionsIds, [Validators.required]),
         packageTitle: new FormControl(''),
-        packagePrice: new FormControl(''),
+        packagePrice: new FormControl('', [Validators.pattern('^[0-9]*$')]),
         departurePackage: new FormControl(''),
         DeparturePackagePrice: new FormControl(''),
         packageStandard: new FormControl(false),
         departureLocation: new FormControl(''),
         departureVia: new FormControl(''),
         departurePackages: new FormControl(''),
-        departurePackagePrice: new FormControl(''),
+        departurePackagePrice: new FormControl('', [Validators.pattern('^[0-9]*$')]),
         departureDate: new FormControl({value: '', disabled: true}),
         departureTime: new FormControl(''),
         arrivalDate: new FormControl({value: '', disabled: true}),
@@ -106,7 +107,7 @@ export class AddTripComponent implements OnInit {
         itineraryDepartures: new FormControl(''),
         itineraryBody: new FormControl(''),
         itineraryServices: new FormControl(''),
-        galleryImages: new FormControl([]),
+        galleryImages: new FormControl([], [Validators.required]),
       }
     );
     this.filteredAttractions.next(this.allAttractions.slice());
@@ -335,29 +336,38 @@ export class AddTripComponent implements OnInit {
   }
 
   addTrip() {
-    const trip: Trip = {
-      title: this.formControl.tripTitle.value,
-      slug: this.formControl.slug.value,
-      overview: this.formControl.overview.value,
-      attractions: this.formControl.attractions.value.map((e: string) => {
-        return {id: e};
-      }),
-      packages: this.packagesList,
-      departures: this.departuresList,
-      itinerary_days: this.itineraryDaysList,
-      gallery_images: this.images
-    };
-    console.log(trip);
-    if (this.isEditMode) {
-      this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
-        alert('Trip updated successfully');
-        this.router.navigate(['/trips']).then();
-      });
+    if (this.addTripForm.valid) {
+      const trip: Trip = {
+        title: this.formControl.tripTitle.value,
+        slug: this.formControl.slug.value,
+        overview: this.formControl.overview.value,
+        attractions: this.formControl.attractions.value.map((e: string) => {
+          return {id: e};
+        }),
+        packages: this.packagesList,
+        departures: this.departuresList,
+        itinerary_days: this.itineraryDaysList,
+        gallery_images: this.images
+      };
+      console.log('Correct');
+      if (this.isEditMode) {
+        this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
+          this.snackBar.open('Trip updated successfully');
+          this.router.navigate(['/trips']).then();
+        }, error => {
+          this.snackBar.open(error.error.details);
+        });
+      } else {
+        this.tripsService.postTrip(trip).subscribe(() => {
+          this.snackBar.open('Trip added successfully');
+          this.router.navigate(['/trips']).then();
+        }, error => {
+          this.snackBar.open(error.error.details);
+        });
+      }
     } else {
-      this.tripsService.postTrip(trip).subscribe(() => {
-        alert('Trip added successfully');
-        this.router.navigate(['/trips']).then();
-      });
+      this.utilityService.validateAllFormFields(this.addTripForm);
+      this.snackBar.open('Please fill the required fields');
     }
   }
 }

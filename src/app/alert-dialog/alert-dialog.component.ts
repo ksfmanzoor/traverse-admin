@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {TripsService} from 'src/app/services/trips.service';
 
@@ -10,15 +11,18 @@ import {TripsService} from 'src/app/services/trips.service';
 })
 export class AlertDialogComponent implements OnInit {
 
-  constructor(private tripsService: TripsService, private router: Router, @Inject(MAT_DIALOG_DATA) private delInfo: {slug: string}) { }
+  constructor(private tripsService: TripsService, private router: Router, @Inject(MAT_DIALOG_DATA) private delInfo: { slug: string },
+              private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
 
   removeTrip() {
     this.tripsService.deleteTrip(this.delInfo.slug).subscribe(() => {
-      alert('Trip Deleted Successfully');
+      this.snackBar.open('Trip deleted successfully');
       this.router.navigateByUrl('/trips').then();
+    }, error => {
+      this.snackBar.open(error);
     });
   }
 

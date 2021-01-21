@@ -14,7 +14,8 @@ import {TripsService} from 'src/app/services/trips.service';
 export class TripsComponent implements OnInit {
   minifiedTrips: MinifiedTrip[];
 
-  constructor(private route: ActivatedRoute, private tripsService: TripsService, private router: Router, private matDialog: MatDialog) { }
+  constructor(private route: ActivatedRoute, private tripsService: TripsService,
+              private router: Router, private matDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -26,7 +27,6 @@ export class TripsComponent implements OnInit {
     this.tripsService.getTrip(slug).subscribe(tripData => {
       forkJoin([this.tripsService.getTripBasedServices(id),
         this.tripsService.getTripBasedDeparturePackages(id)]).subscribe(tripInitialData => {
-          console.log(tripInitialData);
         this.router.navigate(['/add-trip'], {
           state: {
             isEdit: isEditMode,
