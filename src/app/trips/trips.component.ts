@@ -25,16 +25,8 @@ export class TripsComponent implements OnInit {
 
   fetchTrip(slug: string, id: string, isEditMode: boolean) {
     this.tripsService.getTrip(slug).subscribe(tripData => {
-      forkJoin([this.tripsService.getTripBasedServices(id),
-        this.tripsService.getTripBasedDeparturePackages(id)]).subscribe(tripInitialData => {
-        this.router.navigate(['/add-trip'], {
-          state: {
-            isEdit: isEditMode,
-            tripData,
-            tripServices: tripInitialData[0],
-            tripDeparturePackages: tripInitialData[1]
-          }
-        }).then();
+      this.tripsService.getTripBasedServices(id).subscribe(tripServices => {
+        this.router.navigate(['/add-trip'], {state: {isEdit: isEditMode, tripData, tripServices}}).then();
       });
     });
   }

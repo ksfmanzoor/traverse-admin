@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {ReplaySubject} from 'rxjs';
-import {Attraction, Departure, DeparturePackage, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
+import {Attraction, Departure, ItineraryDay, Package, Trip, TripService, TripServiceValue} from 'src/app/models/trip';
 import {TripsService} from 'src/app/services/trips.service';
 import {UtilityService} from 'src/app/services/utility.service';
 import {v4 as uuid4} from 'uuid';
@@ -32,19 +32,16 @@ export class AddTripComponent implements OnInit {
   allTripServices: TripService[] = [];
 
   packagesList: Package[] = [];
-  departurePackagesList: DeparturePackage[] = [];
   departuresList: Departure[] = [];
   tripServicesList: TripServiceValue[] = [];
   itineraryDaysList: ItineraryDay[] = [];
 
   packageIndex: number;
-  departurePackageIndex: number;
   departureIndex: number;
   serviceIndex: number;
   itineraryIndex: number;
 
   isPackageEditMode = false;
-  isDeparturePackageEditMode = false;
   isDepartureEditMode = false;
   isServiceEditMode = false;
   isItineraryEditMode = false;
@@ -71,7 +68,6 @@ export class AddTripComponent implements OnInit {
       this.departuresList = this.editTripData.departures;
       this.itineraryDaysList = this.editTripData.itinerary_days;
       this.tripServicesList = history.state.tripServices;
-      this.departurePackagesList = history.state.tripDeparturePackages;
       this.tripAttractionsIds = this.editTripData.attractions.map((e) => {
         return this.utilityService.propertyRemover(e, 'id').id;
       });
@@ -87,13 +83,11 @@ export class AddTripComponent implements OnInit {
         attractions: new FormControl(this.tripAttractionsIds, [Validators.required]),
         packageTitle: new FormControl(''),
         packagePrice: new FormControl('', [Validators.pattern('^[0-9]*$')]),
-        departurePackage: new FormControl(''),
-        DeparturePackagePrice: new FormControl(''),
         packageStandard: new FormControl(false),
         departureLocation: new FormControl(''),
         departureVia: new FormControl(''),
-        departurePackages: new FormControl(''),
-        departurePackagePrice: new FormControl('', [Validators.pattern('^[0-9]*$')]),
+        departurePackage: new FormControl(''),
+        departurePrice: new FormControl('', [Validators.pattern('^[0-9]*$')]),
         departureDate: new FormControl({value: '', disabled: true}),
         departureTime: new FormControl(''),
         arrivalDate: new FormControl({value: '', disabled: true}),
@@ -169,39 +163,13 @@ export class AddTripComponent implements OnInit {
     this.packagesList.splice(index, 1);
   }
 
-  addDeparturePackage() {
-    const departurePackage: DeparturePackage = {
-      id: uuid4(),
-      package: this.formControl.departurePackage.value,
-      price_per_person: this.formControl.departurePackagePrice.value,
-    };
-    if (this.isDeparturePackageEditMode) {
-      this.departurePackagesList[this.departurePackageIndex] = departurePackage;
-      this.isDeparturePackageEditMode = !this.isDeparturePackageEditMode;
-    } else {
-      this.departurePackagesList.push(departurePackage);
-    }
-    this.formControl.departurePackage.setValue('');
-    this.formControl.departurePackagePrice.setValue('');
-  }
-
-  deleteDeparturePackage(index: number) {
-    this.departurePackagesList.splice(index, 1);
-  }
-
-  updateDeparturePackage(departurePackage: DeparturePackage, index: number) {
-    this.formControl.departurePackage.setValue(departurePackage.package);
-    this.formControl.departurePackagePrice.setValue(departurePackage.price_per_person);
-    this.departurePackageIndex = index;
-    this.isDeparturePackageEditMode = !this.isDeparturePackageEditMode;
-  }
-
   addDeparture() {
     const departure: Departure = {
       id: uuid4(),
       location: this.formControl.departureLocation.value,
       via: this.formControl.departureVia.value,
-      departure_packages: this.formControl.departurePackages.value,
+      package: this.formControl.departurePackage.value,
+      price_per_person: this.formControl.departurePrice.value,
       departure_date: this.utilityService.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
         this.formControl.departureTime.value).toISOString(),
       arrival_date: this.utilityService.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
@@ -216,7 +184,8 @@ export class AddTripComponent implements OnInit {
     }
     this.formControl.departureLocation.setValue('');
     this.formControl.departureVia.setValue('');
-    this.formControl.departurePackages.setValue('');
+    this.formControl.departurePackage.setValue('');
+    this.formControl.departurePrice.setValue('');
     this.formControl.departureDate.setValue('');
     this.formControl.departureTime.setValue('');
     this.formControl.arrivalDate.setValue('');
@@ -227,7 +196,8 @@ export class AddTripComponent implements OnInit {
   updateDeparture(departure: Departure, index: number) {
     this.formControl.departureLocation.setValue(departure.location);
     this.formControl.departureVia.setValue(departure.via);
-    this.formControl.departurePackages.setValue(departure.departure_packages);
+    this.formControl.departurePackage.setValue(departure.package);
+    this.formControl.departurePrice.setValue(departure.price_per_person);
     this.formControl.departureDate.setValue(new Date(departure.departure_date));
     this.formControl.departureTime.setValue(formatDate(departure.departure_date, 'hh:mm a', 'en'));
     this.formControl.arrivalDate.setValue(new Date(departure.arrival_date));
@@ -349,7 +319,6 @@ export class AddTripComponent implements OnInit {
         itinerary_days: this.itineraryDaysList,
         gallery_images: this.images
       };
-      console.log('Correct');
       if (this.isEditMode) {
         this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
           this.snackBar.open('Trip updated successfully');

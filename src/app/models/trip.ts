@@ -43,16 +43,11 @@ export interface Departure {
   id: string;
   location: string;
   via: string;
-  departure_packages: DeparturePackage[];
+  package: string;
+  price_per_person: string;
   departure_date: string;
   arrival_date: string;
   is_standard: boolean;
-}
-
-export interface DeparturePackage {
-  id: string;
-  price_per_person: number;
-  package: string;
 }
 
 export interface GalleryImage {
