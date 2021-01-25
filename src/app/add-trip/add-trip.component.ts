@@ -324,14 +324,14 @@ export class AddTripComponent implements OnInit {
           this.snackBar.open('Trip updated successfully');
           this.router.navigate(['/trips']).then();
         }, error => {
-          this.snackBar.open(error.error.details);
+          this.snackBar.open(error);
         });
       } else {
         this.tripsService.postTrip(trip).subscribe(() => {
           this.snackBar.open('Trip added successfully');
           this.router.navigate(['/trips']).then();
         }, error => {
-          this.snackBar.open(error.error.details);
+          this.snackBar.open(error);
         });
       }
     } else {
