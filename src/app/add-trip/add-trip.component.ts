@@ -101,7 +101,7 @@ export class AddTripComponent implements OnInit {
         itineraryDepartures: new FormControl(''),
         itineraryBody: new FormControl(''),
         itineraryServices: new FormControl(''),
-        galleryImages: new FormControl([], [Validators.required]),
+        galleryImages: new FormControl([]),
       }
     );
     this.filteredAttractions.next(this.allAttractions.slice());

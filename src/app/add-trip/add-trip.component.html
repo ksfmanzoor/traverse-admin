@@ -355,7 +355,6 @@
     <div class="trip-add-gallery-images-row">
       <h4>Images: </h4>
       <input type="file" multiple (change)="onFileChange($event)">
-      <mat-error *ngIf="formControl.galleryImages.hasError('required')">Gallery images are required</mat-error>
     </div>
     <ng-container *ngIf="isEditMode">
       <h3>Images</h3>
