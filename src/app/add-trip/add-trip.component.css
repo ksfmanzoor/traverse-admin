@@ -17,14 +17,8 @@
   align-items: center;
   padding: 20px 40px;
 }
-.trip-add-title-slug-row h4 {
-  margin-right: 100px;
-}
-.trip-add-title-slug-row h4:nth-child(3) {
-  margin-left: 20px;
-}
-.trip-add-title-slug-row .mat-form-field {
-  width: 100% !important;
+.trip-add-title-slug-row mat-checkbox {
+  margin-bottom: 16px;
 }
 
 .trip-add-overview-row {

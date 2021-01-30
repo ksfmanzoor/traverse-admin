@@ -79,6 +79,7 @@ export class AddTripComponent implements OnInit {
     this.addTripForm = new FormGroup({
         tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : '', [Validators.required]),
         slug: new FormControl(this.isEditMode ? this.editTripData.slug : '', [Validators.required]),
+        tripFeatured: new FormControl(''),
         overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : '', [Validators.required]),
         attractions: new FormControl(this.tripAttractionsIds, [Validators.required]),
         packageTitle: new FormControl(''),
@@ -100,7 +101,7 @@ export class AddTripComponent implements OnInit {
         itineraryGroup: new FormControl(''),
         itineraryDepartures: new FormControl(''),
         itineraryBody: new FormControl(''),
-        itineraryServices: new FormControl(''),
+        itineraryServices: new FormControl([]),
         galleryImages: new FormControl([]),
       }
     );
@@ -134,21 +135,25 @@ export class AddTripComponent implements OnInit {
   }
 
   addPackage() {
-    const pack: Package = {
-      id: uuid4(),
-      title: this.formControl.packageTitle.value,
-      price_per_person: this.formControl.packagePrice.value,
-      is_standard: this.formControl.packageStandard.value
-    };
-    if (this.isPackageEditMode) {
-      this.packagesList[this.packageIndex] = pack;
-      this.isPackageEditMode = !this.isPackageEditMode;
+    if (this.formControl.packageTitle.value !== '' && this.formControl.packagePrice.value !== '') {
+      const pack: Package = {
+        id: uuid4(),
+        title: this.formControl.packageTitle.value,
+        price_per_person: this.formControl.packagePrice.value,
+        is_standard: this.formControl.packageStandard.value
+      };
+      if (this.isPackageEditMode) {
+        this.packagesList[this.packageIndex] = pack;
+        this.isPackageEditMode = !this.isPackageEditMode;
+      } else {
+        this.packagesList.push(pack);
+      }
+      this.formControl.packageTitle.setValue('');
+      this.formControl.packagePrice.setValue('');
+      this.formControl.packageStandard.setValue(false);
     } else {
-      this.packagesList.push(pack);
+      this.snackBar.open('All fields are required');
     }
-    this.formControl.packageTitle.setValue('');
-    this.formControl.packagePrice.setValue('');
-    this.formControl.packageStandard.setValue(false);
   }
 
   updatePackage(packageInfo: Package, index: number) {
@@ -164,33 +169,43 @@ export class AddTripComponent implements OnInit {
   }
 
   addDeparture() {
-    const departure: Departure = {
-      id: uuid4(),
-      location: this.formControl.departureLocation.value,
-      via: this.formControl.departureVia.value,
-      package: this.formControl.departurePackage.value,
-      price_per_person: this.formControl.departurePrice.value,
-      departure_date: this.utilityService.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
-        this.formControl.departureTime.value).toISOString(),
-      arrival_date: this.utilityService.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
-        this.formControl.arrivalTime.value).toISOString(),
-      is_standard: this.formControl.departureStandard.value
-    };
-    if (this.isDepartureEditMode) {
-      this.departuresList[this.departureIndex] = departure;
-      this.isDepartureEditMode = !this.isDepartureEditMode;
+    if (this.formControl.departureLocation.value !== '' &&
+      this.formControl.departureVia.value !== '' &&
+      this.formControl.departurePackage.value !== '' &&
+      this.formControl.departureDate.value !== '' &&
+      this.formControl.departureTime.value !== '' &&
+      this.formControl.arrivalDate.value !== '' &&
+      this.formControl.arrivalTime.value !== '') {
+      const departure: Departure = {
+        id: uuid4(),
+        location: this.formControl.departureLocation.value,
+        via: this.formControl.departureVia.value,
+        package: this.formControl.departurePackage.value,
+        price_per_person: this.formControl.departurePrice.value,
+        departure_date: this.utilityService.dateAndTimeCombiner(this.formControl.departureDate.value.toString(),
+          this.formControl.departureTime.value).toISOString(),
+        arrival_date: this.utilityService.dateAndTimeCombiner(this.formControl.arrivalDate.value.toString(),
+          this.formControl.arrivalTime.value).toISOString(),
+        is_standard: this.formControl.departureStandard.value
+      };
+      if (this.isDepartureEditMode) {
+        this.departuresList[this.departureIndex] = departure;
+        this.isDepartureEditMode = !this.isDepartureEditMode;
+      } else {
+        this.departuresList.push(departure);
+      }
+      this.formControl.departureLocation.setValue('');
+      this.formControl.departureVia.setValue('');
+      this.formControl.departurePackage.setValue('');
+      this.formControl.departurePrice.setValue('');
+      this.formControl.departureDate.setValue('');
+      this.formControl.departureTime.setValue('');
+      this.formControl.arrivalDate.setValue('');
+      this.formControl.arrivalTime.setValue('');
+      this.formControl.departureStandard.setValue(false);
     } else {
-      this.departuresList.push(departure);
+      this.snackBar.open('All fields are required');
     }
-    this.formControl.departureLocation.setValue('');
-    this.formControl.departureVia.setValue('');
-    this.formControl.departurePackage.setValue('');
-    this.formControl.departurePrice.setValue('');
-    this.formControl.departureDate.setValue('');
-    this.formControl.departureTime.setValue('');
-    this.formControl.arrivalDate.setValue('');
-    this.formControl.arrivalTime.setValue('');
-    this.formControl.departureStandard.setValue(false);
   }
 
   updateDeparture(departure: Departure, index: number) {
@@ -214,20 +229,26 @@ export class AddTripComponent implements OnInit {
 
 
   addTripService() {
-    const service: TripServiceValue = {
-      trip_service: this.formControl.serviceType.value,
-      value: this.formControl.serviceValue.value,
-      packages: this.formControl.servicePackages.value,
-    };
-    if (this.isServiceEditMode) {
-      this.tripServicesList[this.serviceIndex] = service;
-      this.isServiceEditMode = !this.isServiceEditMode;
+    if (this.formControl.serviceType.value !== '' &&
+      this.formControl.serviceValue.value !== '' &&
+      this.formControl.servicePackages.value !== '') {
+      const service: TripServiceValue = {
+        trip_service: this.formControl.serviceType.value,
+        value: this.formControl.serviceValue.value,
+        packages: this.formControl.servicePackages.value,
+      };
+      if (this.isServiceEditMode) {
+        this.tripServicesList[this.serviceIndex] = service;
+        this.isServiceEditMode = !this.isServiceEditMode;
+      } else {
+        this.tripServicesList.push(service);
+      }
+      this.formControl.serviceType.setValue('');
+      this.formControl.serviceValue.setValue('');
+      this.formControl.servicePackages.setValue('');
     } else {
-      this.tripServicesList.push(service);
+      this.snackBar.open('All fields are required');
     }
-    this.formControl.serviceType.setValue('');
-    this.formControl.serviceValue.setValue('');
-    this.formControl.servicePackages.setValue('');
   }
 
   deleteServiceValue(index: number) {
@@ -243,24 +264,31 @@ export class AddTripComponent implements OnInit {
   }
 
   addItineraryDay() {
-    const itineraryDay: ItineraryDay = {
-      date: this.datePipe.transform(this.formControl.itineraryDate.value, 'yyyy-MM-dd'),
-      group: this.formControl.itineraryGroup.value,
-      body: this.formControl.itineraryBody.value,
-      departures: this.formControl.itineraryDepartures.value,
-      trip_service_values: this.formControl.itineraryServices.value,
-    };
-    if (this.isItineraryEditMode) {
-      this.itineraryDaysList[this.itineraryIndex] = itineraryDay;
-      this.isItineraryEditMode = !this.isItineraryEditMode;
+    if (this.formControl.itineraryDate.value !== '' &&
+      this.formControl.itineraryGroup.value !== '' &&
+      this.formControl.itineraryBody.value !== '' &&
+      this.formControl.itineraryDepartures.value) {
+      const itineraryDay: ItineraryDay = {
+        date: this.datePipe.transform(this.formControl.itineraryDate.value, 'yyyy-MM-dd'),
+        group: this.formControl.itineraryGroup.value,
+        body: this.formControl.itineraryBody.value,
+        departures: this.formControl.itineraryDepartures.value,
+        trip_service_values: this.formControl.itineraryServices.value,
+      };
+      if (this.isItineraryEditMode) {
+        this.itineraryDaysList[this.itineraryIndex] = itineraryDay;
+        this.isItineraryEditMode = !this.isItineraryEditMode;
+      } else {
+        this.itineraryDaysList.push(itineraryDay);
+      }
+      this.formControl.itineraryDate.setValue('');
+      this.formControl.itineraryGroup.setValue('');
+      this.formControl.itineraryBody.setValue('');
+      this.formControl.itineraryDepartures.setValue('');
+      this.formControl.itineraryServices.setValue('');
     } else {
-      this.itineraryDaysList.push(itineraryDay);
+      this.snackBar.open('All fields are required');
     }
-    this.formControl.itineraryDate.setValue('');
-    this.formControl.itineraryGroup.setValue('');
-    this.formControl.itineraryBody.setValue('');
-    this.formControl.itineraryDepartures.setValue('');
-    this.formControl.itineraryServices.setValue('');
   }
 
   updateItineraryDay(itineraryDay: ItineraryDay, index: number) {
@@ -306,37 +334,38 @@ export class AddTripComponent implements OnInit {
   }
 
   addTrip() {
-    if (this.addTripForm.valid) {
-      const trip: Trip = {
-        title: this.formControl.tripTitle.value,
-        slug: this.formControl.slug.value,
-        overview: this.formControl.overview.value,
-        attractions: this.formControl.attractions.value.map((e: string) => {
-          return {id: e};
-        }),
-        packages: this.packagesList,
-        departures: this.departuresList,
-        itinerary_days: this.itineraryDaysList,
-        gallery_images: this.images
-      };
-      if (this.isEditMode) {
-        this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
-          this.snackBar.open('Trip updated successfully');
-          this.router.navigate(['/trips']).then();
-        }, error => {
-          this.snackBar.open(error);
-        });
-      } else {
-        this.tripsService.postTrip(trip).subscribe(() => {
-          this.snackBar.open('Trip added successfully');
-          this.router.navigate(['/trips']).then();
-        }, error => {
-          this.snackBar.open(error);
-        });
-      }
-    } else {
-      this.utilityService.validateAllFormFields(this.addTripForm);
-      this.snackBar.open('Please fill the required fields');
-    }
+    // if (this.addTripForm.valid) {
+    const trip: Trip = {
+      title: this.formControl.tripTitle.value,
+      slug: this.formControl.slug.value,
+      overview: this.formControl.overview.value,
+      attractions: this.formControl.attractions.value.map((e: string) => {
+        return {id: e};
+      }),
+      packages: this.packagesList,
+      departures: this.departuresList,
+      itinerary_days: this.itineraryDaysList,
+      gallery_images: this.images
+    };
+    console.log(trip);
+    //   if (this.isEditMode) {
+    //     this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
+    //       this.snackBar.open('Trip updated successfully');
+    //       this.router.navigate(['/trips']).then();
+    //     }, error => {
+    //       this.snackBar.open(error);
+    //     });
+    //   } else {
+    //     this.tripsService.postTrip(trip).subscribe(() => {
+    //       this.snackBar.open('Trip added successfully');
+    //       this.router.navigate(['/trips']).then();
+    //     }, error => {
+    //       this.snackBar.open(error);
+    //     });
+    //   }
+    // } else {
+    //   this.utilityService.validateAllFormFields(this.addTripForm);
+    //   this.snackBar.open('Please fill the required fields');
+    // }
   }
 }

@@ -19,6 +19,7 @@
         <mat-hint>Hint: Should be in Lower Case</mat-hint>
         <mat-error *ngIf="formControl.slug.hasError('required')">Slug is required</mat-error>
       </mat-form-field>
+      <mat-checkbox formControlName="tripFeatured">is Featured</mat-checkbox>
     </div>
     <div class="trip-add-overview-row">
       <h4>Overview:</h4>

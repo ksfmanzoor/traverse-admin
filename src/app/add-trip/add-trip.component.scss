@@ -19,16 +19,8 @@
   align-items: center;
   padding: 20px 40px;
 
-  h4 {
-    margin-right: 100px;
-  }
-
-  h4:nth-child(3) {
-    margin-left: 20px;
-  }
-
-  .mat-form-field {
-    width: 100% !important;
+  mat-checkbox {
+    margin-bottom: 16px;
   }
 }
 
