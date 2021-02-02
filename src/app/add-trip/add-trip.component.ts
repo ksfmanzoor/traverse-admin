@@ -172,6 +172,7 @@ export class AddTripComponent implements OnInit {
     if (this.formControl.departureLocation.value !== '' &&
       this.formControl.departureVia.value !== '' &&
       this.formControl.departurePackage.value !== '' &&
+      this.formControl.departurePrice.value !== '' &&
       this.formControl.departureDate.value !== '' &&
       this.formControl.departureTime.value !== '' &&
       this.formControl.arrivalDate.value !== '' &&
