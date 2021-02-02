@@ -79,7 +79,7 @@ export class AddTripComponent implements OnInit {
     this.addTripForm = new FormGroup({
         tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : '', [Validators.required]),
         slug: new FormControl(this.isEditMode ? this.editTripData.slug : '', [Validators.required]),
-        tripFeatured: new FormControl(''),
+        tripFeatured: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.is_featured : ''),
         overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : '', [Validators.required]),
         attractions: new FormControl(this.tripAttractionsIds, [Validators.required]),
         packageTitle: new FormControl(''),
@@ -334,38 +334,38 @@ export class AddTripComponent implements OnInit {
   }
 
   addTrip() {
-    // if (this.addTripForm.valid) {
-    const trip: Trip = {
-      title: this.formControl.tripTitle.value,
-      slug: this.formControl.slug.value,
-      overview: this.formControl.overview.value,
-      attractions: this.formControl.attractions.value.map((e: string) => {
-        return {id: e};
-      }),
-      packages: this.packagesList,
-      departures: this.departuresList,
-      itinerary_days: this.itineraryDaysList,
-      gallery_images: this.images
-    };
-    console.log(trip);
-    //   if (this.isEditMode) {
-    //     this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
-    //       this.snackBar.open('Trip updated successfully');
-    //       this.router.navigate(['/trips']).then();
-    //     }, error => {
-    //       this.snackBar.open(error);
-    //     });
-    //   } else {
-    //     this.tripsService.postTrip(trip).subscribe(() => {
-    //       this.snackBar.open('Trip added successfully');
-    //       this.router.navigate(['/trips']).then();
-    //     }, error => {
-    //       this.snackBar.open(error);
-    //     });
-    //   }
-    // } else {
-    //   this.utilityService.validateAllFormFields(this.addTripForm);
-    //   this.snackBar.open('Please fill the required fields');
-    // }
+    if (this.addTripForm.valid) {
+      const trip: Trip = {
+        title: this.formControl.tripTitle.value,
+        slug: this.formControl.slug.value,
+        is_featured: this.formControl.tripFeatured.value,
+        overview: this.formControl.overview.value,
+        attractions: this.formControl.attractions.value.map((e: string) => {
+          return {id: e};
+        }),
+        packages: this.packagesList,
+        departures: this.departuresList,
+        itinerary_days: this.itineraryDaysList,
+        gallery_images: this.images
+      };
+      if (this.isEditMode) {
+        this.tripsService.updateTrip(this.editTripData.slug, trip).subscribe(() => {
+          this.snackBar.open('Trip updated successfully');
+          this.router.navigate(['/trips']).then();
+        }, error => {
+          this.snackBar.open(error);
+        });
+      } else {
+        this.tripsService.postTrip(trip).subscribe(() => {
+          this.snackBar.open('Trip added successfully');
+          this.router.navigate(['/trips']).then();
+        }, error => {
+          this.snackBar.open(error);
+        });
+      }
+    } else {
+      this.utilityService.validateAllFormFields(this.addTripForm);
+      this.snackBar.open('Please fill the required fields');
+    }
   }
 }

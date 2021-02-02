@@ -2,6 +2,7 @@ export interface Trip {
   id?: string;
   title: string;
   slug: string;
+  is_featured: boolean;
   overview: string;
   packages: Package[];
   departures: Departure[];
