@@ -79,7 +79,7 @@ export class AddTripComponent implements OnInit {
     this.addTripForm = new FormGroup({
         tripTitle: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.title : '', [Validators.required]),
         slug: new FormControl(this.isEditMode ? this.editTripData.slug : '', [Validators.required]),
-        tripFeatured: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.is_featured : ''),
+        tripFeatured: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.is_featured : false),
         overview: new FormControl(this.isEditMode || this.isDuplicateMode ? this.editTripData.overview : '', [Validators.required]),
         attractions: new FormControl(this.tripAttractionsIds, [Validators.required]),
         packageTitle: new FormControl(''),
