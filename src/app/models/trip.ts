@@ -19,6 +19,7 @@ export interface TripService {
 }
 
 export interface TripServiceValue {
+  id?: string;
   value: string;
   trip_service: TripService;
   packages: string[];

@@ -51,7 +51,7 @@ export class AddTripComponent implements OnInit {
   filteredAttractions: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
 
   @ViewChild('multiSelect', {static: true}) multiSelect: MatSelect;
-  private images = [];
+  images = [];
 
   constructor(private route: ActivatedRoute, private tripsService: TripsService,
               private datePipe: DatePipe, public utilityService: UtilityService, private router: Router, private snackBar: MatSnackBar) {}
@@ -67,7 +67,7 @@ export class AddTripComponent implements OnInit {
       this.packagesList = this.editTripData.packages;
       this.departuresList = this.editTripData.departures;
       this.itineraryDaysList = this.editTripData.itinerary_days;
-      this.tripServicesList = history.state.tripServices;
+      this.tripServicesList = this.utilityService.filterUniqueTripServices(history.state.tripServices);
       this.tripAttractionsIds = this.editTripData.attractions.map((e) => {
         return this.utilityService.propertyRemover(e, 'id').id;
       });
@@ -106,7 +106,7 @@ export class AddTripComponent implements OnInit {
       }
     );
     this.filteredAttractions.next(this.allAttractions.slice());
-
+    console.log(this.formControl.itineraryServices.value);
     this.attractionsMultiFilterCtrl.valueChanges
       .pipe()
       .subscribe(() => {
@@ -144,7 +144,7 @@ export class AddTripComponent implements OnInit {
       };
       if (this.isPackageEditMode) {
         this.packagesList[this.packageIndex] = pack;
-        this.isPackageEditMode = !this.isPackageEditMode;
+        this.isPackageEditMode = false;
       } else {
         this.packagesList.push(pack);
       }
@@ -161,7 +161,7 @@ export class AddTripComponent implements OnInit {
     this.formControl.packagePrice.setValue(packageInfo.price_per_person);
     this.formControl.packageStandard.setValue(packageInfo.is_standard);
     this.packageIndex = index;
-    this.isPackageEditMode = !this.isPackageEditMode;
+    this.isPackageEditMode = true;
   }
 
   deletePackage(index: number) {
@@ -191,7 +191,7 @@ export class AddTripComponent implements OnInit {
       };
       if (this.isDepartureEditMode) {
         this.departuresList[this.departureIndex] = departure;
-        this.isDepartureEditMode = !this.isDepartureEditMode;
+        this.isDepartureEditMode = false;
       } else {
         this.departuresList.push(departure);
       }
@@ -220,12 +220,16 @@ export class AddTripComponent implements OnInit {
     this.formControl.arrivalTime.setValue(formatDate(departure.arrival_date, 'hh:mm a', 'en'));
     this.formControl.departureStandard.setValue(departure.is_standard);
     this.departureIndex = index;
-    this.isDepartureEditMode = !this.isDepartureEditMode;
+    this.isDepartureEditMode = true;
   }
 
   deleteDeparture(index: number) {
     this.departuresList.splice(index, 1);
 
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.trip_service.id === o2.trip_service.id;
   }
 
 
@@ -240,7 +244,7 @@ export class AddTripComponent implements OnInit {
       };
       if (this.isServiceEditMode) {
         this.tripServicesList[this.serviceIndex] = service;
-        this.isServiceEditMode = !this.isServiceEditMode;
+        this.isServiceEditMode = false;
       } else {
         this.tripServicesList.push(service);
       }
@@ -261,7 +265,7 @@ export class AddTripComponent implements OnInit {
     this.formControl.serviceValue.setValue(service.value);
     this.formControl.servicePackages.setValue(service.packages);
     this.serviceIndex = index;
-    this.isServiceEditMode = !this.isServiceEditMode;
+    this.isServiceEditMode = true;
   }
 
   addItineraryDay() {
@@ -278,7 +282,7 @@ export class AddTripComponent implements OnInit {
       };
       if (this.isItineraryEditMode) {
         this.itineraryDaysList[this.itineraryIndex] = itineraryDay;
-        this.isItineraryEditMode = !this.isItineraryEditMode;
+        this.isItineraryEditMode = false;
       } else {
         this.itineraryDaysList.push(itineraryDay);
       }
@@ -286,7 +290,7 @@ export class AddTripComponent implements OnInit {
       this.formControl.itineraryGroup.setValue('');
       this.formControl.itineraryBody.setValue('');
       this.formControl.itineraryDepartures.setValue('');
-      this.formControl.itineraryServices.setValue('');
+      this.formControl.itineraryServices.setValue([]);
     } else {
       this.snackBar.open('All fields are required');
     }
@@ -299,7 +303,7 @@ export class AddTripComponent implements OnInit {
     this.formControl.itineraryDepartures.setValue(itineraryDay.departures);
     this.formControl.itineraryServices.setValue(itineraryDay.trip_service_values);
     this.itineraryIndex = index;
-    this.isItineraryEditMode = !this.isItineraryEditMode;
+    this.isItineraryEditMode = true;
   }
 
   deleteItineraryDay(index: number) {
@@ -308,7 +312,6 @@ export class AddTripComponent implements OnInit {
 
 
   onFileChange(event) {
-    this.images = [];
     if (event.target.files && event.target.files[0]) {
       const filesAmount = event.target.files.length;
       for (let i = 0; i < filesAmount; i++) {
@@ -327,6 +330,9 @@ export class AddTripComponent implements OnInit {
     }
   }
 
+  updateGalleryImage(index: number) {
+    this.images.splice(index, 1);
+  }
 
   removeGalleryImage(id) {
     this.tripsService.deleteGalleryImage(id).subscribe(() => {
@@ -354,14 +360,14 @@ export class AddTripComponent implements OnInit {
           this.snackBar.open('Trip updated successfully');
           this.router.navigate(['/trips']).then();
         }, error => {
-          this.snackBar.open(error);
+          this.snackBar.open(error.message);
         });
       } else {
         this.tripsService.postTrip(trip).subscribe(() => {
           this.snackBar.open('Trip added successfully');
           this.router.navigate(['/trips']).then();
         }, error => {
-          this.snackBar.open(error);
+          this.snackBar.open(error.message);
         });
       }
     } else {

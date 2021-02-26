@@ -302,7 +302,7 @@
       <h4>Trip Services:</h4>
       <mat-form-field appearance="fill" style="flex: auto; margin: 0 40px">
         <mat-label>Trip Services</mat-label>
-        <mat-select formControlName="itineraryServices" multiple>
+        <mat-select formControlName="itineraryServices" multiple [compareWith]="compareObjects">
           <mat-option *ngFor="let service of tripServicesList" [value]="service">
             {{service.trip_service.title + ': ' + service.trip_service.description + ' at ' + service.value}}
           </mat-option>
@@ -357,6 +357,19 @@
       <h4>Images: </h4>
       <input type="file" multiple (change)="onFileChange($event)">
     </div>
+    <mat-list>
+      <mat-list-item *ngFor="let i of images;let j=index">
+        <div class="gallery-images-list-items">
+          <a class="list-item-text">Image {{j}}</a>
+          <div class="list-item-actions">
+            <button mat-icon-button (click)="updateGalleryImage(j)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
     <ng-container *ngIf="isEditMode">
       <h3>Images</h3>
       <mat-list>

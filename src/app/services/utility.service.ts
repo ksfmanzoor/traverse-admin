@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {Package} from 'src/app/models/trip';
+import {Package, TripService, TripServiceValue} from 'src/app/models/trip';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +37,16 @@ export class UtilityService {
         this.validateAllFormFields(control);
       }
     });
+  }
+
+  filterUniqueTripServices(tripServicesList: TripServiceValue[]) {
+    const uniqueTripServices: TripServiceValue[] = [];
+    tripServicesList.forEach((e) => {
+      const index = uniqueTripServices.findIndex(x => x.trip_service.id === e.trip_service.id && x.value === e.value);
+      if (index <= -1) {
+        uniqueTripServices.push({id: e.id, value: e.value, trip_service: e.trip_service, packages: e.packages});
+      }
+    });
+    return uniqueTripServices;
   }
 }
