@@ -106,7 +106,6 @@ export class AddTripComponent implements OnInit {
       }
     );
     this.filteredAttractions.next(this.allAttractions.slice());
-    console.log(this.formControl.itineraryServices.value);
     this.attractionsMultiFilterCtrl.valueChanges
       .pipe()
       .subscribe(() => {
@@ -137,7 +136,7 @@ export class AddTripComponent implements OnInit {
   addPackage() {
     if (this.formControl.packageTitle.value !== '' && this.formControl.packagePrice.value !== '') {
       const pack: Package = {
-        id: uuid4(),
+        id: this.isPackageEditMode && this.isEditMode ? this.packagesList[this.packageIndex].id : uuid4(),
         title: this.formControl.packageTitle.value,
         price_per_person: this.formControl.packagePrice.value,
         is_standard: this.formControl.packageStandard.value
@@ -178,7 +177,7 @@ export class AddTripComponent implements OnInit {
       this.formControl.arrivalDate.value !== '' &&
       this.formControl.arrivalTime.value !== '') {
       const departure: Departure = {
-        id: uuid4(),
+        id: this.isDepartureEditMode && this.isEditMode ? this.departuresList[this.departureIndex].id : uuid4(),
         location: this.formControl.departureLocation.value,
         via: this.formControl.departureVia.value,
         package: this.formControl.departurePackage.value,
